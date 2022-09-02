@@ -23,7 +23,6 @@ module.exports = {
   },
   getAllProduct: async (request, response) => {
     try {
-      console.log(request.query);
       const result = await productModel.getAllProduct();
       return wrapper.response(
         response,
@@ -77,7 +76,6 @@ module.exports = {
   },
   createProduct: async (request, response) => {
     try {
-      console.log(request.body);
       const { name, price } = request.body;
       const setData = {
         name,

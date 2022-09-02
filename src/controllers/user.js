@@ -1,15 +1,15 @@
 const { request } = require("express");
-const eventModel = require("../models/event");
+const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
-  getAllEvent: async (request, response) => {
+  getAllUser: async (request, response) => {
     try {
-      const result = await eventModel.getAllEvent();
+      const result = await userModel.getAllUser();
       return wrapper.response(
         response,
         result.status,
-        "Success Get Event !",
+        "Success Get User !",
         result.data
       );
     } catch (error) {
@@ -21,7 +21,7 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
-  getEventById: async (request, response) => {
+  getUserById: async (request, response) => {
     try {
       // const request = {
       //   // ...
@@ -30,13 +30,13 @@ module.exports = {
       // };
       const { id } = request.params;
 
-      const result = await eventModel.getEventById(id);
+      const result = await userModel.getUserById(id);
 
       if (result.data.length < 1) {
         return wrapper.response(
           response,
           404,
-          `Event By eventId ${id} Not Found`,
+          `User By user Id ${id} Not Found`,
           []
         );
       }
@@ -56,25 +56,33 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorEvent);
     }
   },
-  createEvent: async (request, response) => {
+  createUser: async (request, response) => {
     try {
-      const { name, category, location, detail, dateTimeShow, price } =
-        request.body;
-      const setEvent = {
+      const {
         name,
-        category,
-        location,
-        detail,
-        dateTimeShow,
-        price,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
+        email,
+        password,
+      } = request.body;
+      const setUser = {
+        name,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
+        email,
+        password,
       };
-
-      const result = await eventModel.createEvent(setEvent);
-
+      const result = await userModel.createUser(setUser);
       return wrapper.response(
         response,
         result.status,
-        "Success Create Event",
+        "Success Create User",
         result.data
       );
     } catch (error) {
@@ -87,7 +95,3 @@ module.exports = {
     }
   },
 };
-
-// request.query = bisa digunakan untuk fitur paginasi, sort,search di method get
-// request.params = bisa digunakan untuk fitur getdatabyid, updatedata, deletedata
-// request.body = bsa digunakan untuk fitur create/update

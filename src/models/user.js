@@ -1,10 +1,10 @@
 const supabase = require("../config/supabase");
 
 module.exports = {
-  getAllEvent: () =>
+  getAllUser: () =>
     new Promise((resolve, reject) => {
       supabase
-        .from("event")
+        .from("user")
         .select("*")
         .then((result) => {
           if (!result.error) {
@@ -14,17 +14,13 @@ module.exports = {
           }
         });
     }),
-  // new Promise(async (resolve, reject) => {
-  //   const result = await supabase.from("Event").select("*");
-  //   console.log(result);
-  // }),
-  getEventById: (eventId) =>
+  getUserById: (userId) =>
     new Promise((resolve, reject) => {
-      // SELECT * FROM Event WHERE eventId = "123"
+      // SELECT * FROM user WHERE userId = "123"
       supabase
-        .from("event")
+        .from("user")
         .select("*")
-        .eq("eventId", eventId)
+        .eq("userId", userId)
         .then((result) => {
           if (!result.error) {
             resolve(result);
@@ -33,11 +29,11 @@ module.exports = {
           }
         });
     }),
-  createEvent: (data) =>
+  createUser: (data) =>
     new Promise((resolve, reject) => {
       supabase
-        .from("event")
-        .insert([data]) // insert([{name: "Tea", price: 5000}])
+        .from("user")
+        .insert([data])
         .then((result) => {
           if (!result.error) {
             resolve(result);
