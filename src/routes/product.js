@@ -13,10 +13,12 @@ const productController = require("../controllers/product");
 // });
 
 Router.get("/greetings", productController.showGreetings);
-
 // Path Create
 // Path Read
 // Path Update
 // Path Delete
+Router.get("/", productController.getAllProduct);
+Router.get("/:id", productController.getProductById);
+Router.post("/", productController.createProduct);
 
 module.exports = Router;
