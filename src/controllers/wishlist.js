@@ -5,7 +5,12 @@ const wrapper = require("../utils/wrapper");
 module.exports = {
   createWishlist: async (request, response) => {
     try {
-      const result = await wishlistModel.createWishlist();
+      const { eventId, userId } = request.body;
+      const setWishlist = {
+        eventId,
+        userId,
+      };
+      const result = await wishlistModel.createWishlist(setWishlist);
       return wrapper.response(
         response,
         result.status,
@@ -23,7 +28,7 @@ module.exports = {
   },
   getAllWishlist: async (request, response) => {
     try {
-      const result = await userModel.getAllUser();
+      const result = await wishlistModel.getAllWishlist();
       return wrapper.response(
         response,
         result.status,
