@@ -1,11 +1,17 @@
 const supabase = require("../config/supabase");
+const wishlist = require("../controllers/wishlist");
+const user = require("./user");
 
 module.exports = {
-  createWishlist: (data) =>
+  createWishlist: () =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
-        .insert([data])
+        .select(
+          `wishlistId,
+        eventId:event(eventId),
+        userId:user(userId)`
+        )
         .then((result) => {
           if (!result.error) {
             resolve(result);
@@ -18,7 +24,11 @@ module.exports = {
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
-        .select("*")
+        .select(
+          `wishlistId,
+        eventId:event(eventId),
+        userId:user(userId)`
+        )
         .then((result) => {
           if (!result.error) {
             resolve(result);
