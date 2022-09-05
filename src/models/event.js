@@ -37,7 +37,21 @@ module.exports = {
     new Promise((resolve, reject) => {
       supabase
         .from("event")
-        .insert([data]) // insert([{name: "Tea", price: 5000}])
+        .insert([data])
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
+  deleteEvent: (id) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("event")
+        .delete()
+        .eq("eventId", id)
         .then((result) => {
           if (!result.error) {
             resolve(result);

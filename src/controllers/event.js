@@ -86,6 +86,25 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
+  deleteEvent: async (request, response) => {
+    try {
+      const { id } = request.params;
+      const result = await eventModel.deleteEvent(id);
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Delete Event !",
+        result.data
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
 };
 
 // request.query = bisa digunakan untuk fitur paginasi, sort,search di method get
