@@ -15,13 +15,9 @@ module.exports = {
           }
         });
     }),
-  // new Promise(async (resolve, reject) => {
-  //   const result = await supabase.from("product").select("*");
-  //   console.log(result);
-  // }),
+
   getProductById: (id) =>
     new Promise((resolve, reject) => {
-      // SELECT * FROM product WHERE id = "123"
       supabase
         .from("product")
         .select("*")

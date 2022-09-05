@@ -5,7 +5,7 @@ const Router = express.Router();
 const wishlistController = require("../controllers/wishlist");
 
 Router.get("/", wishlistController.getAllWishlist);
-// Router.get("/:id", wishlistController.getWishlistById);
+Router.delete("/:id", wishlistController.deleteWishlist);
 Router.post("/", wishlistController.createWishlist);
 
 module.exports = Router;
