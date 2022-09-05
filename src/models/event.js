@@ -1,11 +1,25 @@
 const supabase = require("../config/supabase");
 
 module.exports = {
-  getAllEvent: () =>
+  getCountEvent: () =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("event")
+        .select("*", { count: "exact" })
+        .then((result) => {
+          if (!result.error) {
+            resolve(result.count);
+          } else {
+            reject(result);
+          }
+        });
+    }),
+  getAllEvent: (offset, limit) =>
     new Promise((resolve, reject) => {
       supabase
         .from("event")
         .select("*")
+        .range(offset, offset + limit - 1)
         .then((result) => {
           if (!result.error) {
             resolve(result);

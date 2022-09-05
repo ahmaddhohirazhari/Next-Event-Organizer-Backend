@@ -1,18 +1,37 @@
-const { request } = require("express");
 const eventModel = require("../models/event");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
   getAllEvent: async (request, response) => {
     try {
-      const result = await eventModel.getAllEvent();
+      let { page, limit } = request.query;
+      page = +page;
+      limit = +limit;
+
+      const totalData = await eventModel.getCountEvent();
+
+      const totalPage = Math.ceil(totalData / limit);
+      const pagination = {
+        // page, totalPage, limit, totalData
+        page,
+        totalPage,
+        limit,
+        totalData,
+      };
+
+      const offset = page * limit - limit;
+
+      const result = await eventModel.getAllEvent(offset, limit);
+      console.log("test");
       return wrapper.response(
         response,
         result.status,
-        "Success Get Event !",
-        result.data
+        "Success Get Data !",
+        result.data,
+        pagination
       );
     } catch (error) {
+      // console.log(error);
       const {
         status = 500,
         statusText = "Internal Server Error",
