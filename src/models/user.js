@@ -42,4 +42,32 @@ module.exports = {
           }
         });
     }),
+  updateUser: (id, data) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("user")
+        .update(data)
+        .eq("userId", id)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
+  deleteUser: (id) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("user")
+        .delete()
+        .eq("userId", id)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
 };
