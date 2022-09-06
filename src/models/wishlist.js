@@ -27,7 +27,7 @@ module.exports = {
           }
         });
     }),
-  getAllWishlist: () =>
+  getAllWishlist: (offset, limit) =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
@@ -35,6 +35,7 @@ module.exports = {
           `*,
         event(name,category)`
         )
+        .range(offset, offset + limit - 1)
         .then((result) => {
           if (!result.error) {
             resolve(result);
