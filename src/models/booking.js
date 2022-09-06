@@ -7,7 +7,7 @@ module.exports = {
         .from("booking")
         .insert([data])
         .then((result) => {
-          if (!result) {
+          if (!result.error) {
             resolve(result);
           } else {
             reject(result);
