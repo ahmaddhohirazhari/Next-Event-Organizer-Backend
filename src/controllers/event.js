@@ -141,7 +141,6 @@ module.exports = {
           []
         );
       }
-
       const setData = {
         name,
         category,
