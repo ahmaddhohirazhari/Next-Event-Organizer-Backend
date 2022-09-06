@@ -1,13 +1,12 @@
-const { request } = require("express");
 const wishlistModel = require("../models/wishlist");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
   createWishlist: async (request, response) => {
     try {
-      const { WishlistId, userId } = request.body;
+      const { eventId, userId } = request.body;
       const setWishlist = {
-        WishlistId,
+        eventId,
         userId,
       };
       const result = await wishlistModel.createWishlist(setWishlist);
@@ -28,12 +27,30 @@ module.exports = {
   },
   getAllWishlist: async (request, response) => {
     try {
-      const result = await wishlistModel.getAllWishlist();
+      let { page, limit } = request.query;
+      page = +page;
+      limit = +limit;
+
+      const totalData = await wishlistModel.getCountWishlist();
+
+      const totalPage = Math.ceil(totalData / limit);
+      const pagination = {
+        // page, totalPage, limit, totalData
+        page,
+        totalPage,
+        limit,
+        totalData,
+      };
+
+      const offset = page * limit - limit;
+
+      const result = await wishlistModel.getAllWishlist(offset, limit);
       return wrapper.response(
         response,
         result.status,
         "Success Get User !",
-        result.data
+        result.data,
+        pagination
       );
     } catch (error) {
       const {
@@ -42,6 +59,41 @@ module.exports = {
         error: errorData = null,
       } = error;
       return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  getWishlistById: async (request, response) => {
+    try {
+      // const request = {
+      //   // ...
+      //   params: { id: "12345678" },
+      //   // ...
+      // };
+      const { id } = request.params;
+
+      const result = await wishlistModel.getWishlistById(id);
+
+      if (result.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Wishlist By WishlistId ${id} Not Found`,
+          []
+        );
+      }
+
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Get Wishlist By Id",
+        result.data
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorWishlist = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorWishlist);
     }
   },
   deleteWishlist: async (request, response) => {

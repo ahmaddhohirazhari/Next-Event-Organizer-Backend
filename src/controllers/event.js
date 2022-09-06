@@ -4,7 +4,8 @@ const wrapper = require("../utils/wrapper");
 module.exports = {
   getAllEvent: async (request, response) => {
     try {
-      let { page, limit } = request.query;
+      // eslint-disable-next-line prefer-const
+      let { page, limit, name } = request.query;
       page = +page;
       limit = +limit;
 
@@ -21,8 +22,8 @@ module.exports = {
 
       const offset = page * limit - limit;
 
-      const result = await eventModel.getAllEvent(offset, limit);
-      console.log("test");
+      const result = await eventModel.getAllEvent(offset, limit, name);
+
       return wrapper.response(
         response,
         result.status,
@@ -126,8 +127,6 @@ module.exports = {
   },
   updateEvent: async (request, response) => {
     try {
-      console.log(request.params);
-      console.log(request.body);
       const { id } = request.params;
       const { name, category, location, detail, dateTimeShow, price } =
         request.body;

@@ -14,12 +14,14 @@ module.exports = {
           }
         });
     }),
-  getAllEvent: (offset, limit) =>
+  getAllEvent: (offset, limit, name) =>
     new Promise((resolve, reject) => {
       supabase
         .from("event")
         .select("*")
         .range(offset, offset + limit - 1)
+        .textSearch("name", name)
+        .order("createAt", { ascending: true })
         .then((result) => {
           if (!result.error) {
             resolve(result);

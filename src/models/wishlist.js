@@ -14,16 +14,42 @@ module.exports = {
           }
         });
     }),
+  getCountWishlist: () =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("wishlist")
+        .select("*", { count: "exact" })
+        .then((result) => {
+          if (!result.error) {
+            resolve(result.count);
+          } else {
+            reject(result);
+          }
+        });
+    }),
   getAllWishlist: () =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
         .select(
-          `
-        *,event(name,category),
-        user(name)
-        `
+          `*,
+        event(name,category)`
         )
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
+  getWishlistById: (wishlistId) =>
+    new Promise((resolve, reject) => {
+      // SELECT * FROM WIshlist WHERE WIshlistId = "123"
+      supabase
+        .from("wishlist")
+        .select("*")
+        .eq("wishlistId", wishlistId)
         .then((result) => {
           if (!result.error) {
             resolve(result);
