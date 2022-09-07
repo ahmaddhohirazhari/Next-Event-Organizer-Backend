@@ -1,4 +1,3 @@
-const { request } = require("express");
 const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 
@@ -23,11 +22,6 @@ module.exports = {
   },
   getUserById: async (request, response) => {
     try {
-      // const request = {
-      //   // ...
-      //   params: { id: "12345678" },
-      //   // ...
-      // };
       const { id } = request.params;
 
       const result = await userModel.getUserById(id);
@@ -51,9 +45,9 @@ module.exports = {
       const {
         status = 500,
         statusText = "Internal Server Error",
-        error: errorUser = null,
+        error: errorData = null,
       } = error;
-      return wrapper.response(response, status, statusText, errorUser);
+      return wrapper.response(response, status, statusText, errorData);
     }
   },
   createUser: async (request, response) => {
@@ -96,8 +90,6 @@ module.exports = {
   },
   updateUser: async (request, response) => {
     try {
-      console.log(request.params);
-      console.log(request.body);
       const { id } = request.params;
       const { name, username, gender, profession, nationality, dateOfBirth } =
         request.body;
