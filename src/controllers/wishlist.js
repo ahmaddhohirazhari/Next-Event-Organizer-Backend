@@ -28,6 +28,7 @@ module.exports = {
   getAllWishlist: async (request, response) => {
     try {
       let { page, limit } = request.query;
+      const { userId } = request.params;
       page = +page;
       limit = +limit;
 
@@ -35,7 +36,6 @@ module.exports = {
 
       const totalPage = Math.ceil(totalData / limit);
       const pagination = {
-        // page, totalPage, limit, totalData
         page,
         totalPage,
         limit,
@@ -44,7 +44,7 @@ module.exports = {
 
       const offset = page * limit - limit;
 
-      const result = await wishlistModel.getAllWishlist(offset, limit);
+      const result = await wishlistModel.getAllWishlist(offset, limit, userId);
       return wrapper.response(
         response,
         result.status,

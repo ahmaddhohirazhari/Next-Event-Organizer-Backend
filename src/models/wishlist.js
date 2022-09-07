@@ -27,14 +27,15 @@ module.exports = {
           }
         });
     }),
-  getAllWishlist: (offset, limit) =>
+  getAllWishlist: (offset, limit, id) =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
         .select(
           `*,
-        event(name,category)`
+        event(*)`
         )
+        .match({ userId: id })
         .range(offset, offset + limit - 1)
         .then((result) => {
           if (!result.error) {

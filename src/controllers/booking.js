@@ -4,14 +4,12 @@ const wrapper = require("../utils/wrapper");
 module.exports = {
   createBooking: async (request, response) => {
     try {
-      const {
-        userId,
-        eventId,
-        totalTicket,
-        totalPayment,
-        paymentMethod,
-        statusPayment,
-      } = request.body;
+      const { eventId, totalPayment, paymentMethod, statusPayment, section } =
+        request.body;
+
+      const { userId } = request.params;
+      const totalTicket = section.length;
+
       const setBooking = {
         userId,
         eventId,
@@ -21,12 +19,25 @@ module.exports = {
         statusPayment,
       };
       const result = await bookingModel.createBooking(setBooking);
+      const { bookingId } = result.data[0];
+
+      const resultBookingSection = await Promise.all(
+        section.map(async (e) => {
+          try {
+            await bookingModel.createBookingSection(bookingId, e, false);
+            return e;
+          } catch (error) {
+            return error.error;
+          }
+        })
+      );
+      const finalResult = { ...result.data[0], section: resultBookingSection };
 
       return wrapper.response(
         response,
         result.status,
         "Succes Create Booking",
-        result.data
+        finalResult
       );
     } catch (error) {
       const {
