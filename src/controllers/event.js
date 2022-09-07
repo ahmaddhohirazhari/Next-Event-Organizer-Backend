@@ -43,11 +43,6 @@ module.exports = {
   },
   getEventById: async (request, response) => {
     try {
-      // const request = {
-      //   // ...
-      //   params: { id: "12345678" },
-      //   // ...
-      // };
       const { id } = request.params;
 
       const result = await eventModel.getEventById(id);
