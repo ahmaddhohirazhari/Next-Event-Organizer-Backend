@@ -45,7 +45,7 @@ module.exports = {
       supabase
         .from("booking")
         .select("*")
-        .eq("userId", id)
+        .match({ userId: id })
         .then((result) => {
           if (!result.error) {
             resolve(result);

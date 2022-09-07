@@ -4,7 +4,7 @@ const Router = express.Router();
 const bookingController = require("../controllers/booking");
 
 Router.post("/:userId", bookingController.createBooking);
-Router.get("/", bookingController.getAllBooking);
+Router.get("/:userId", bookingController.getAllBooking);
 Router.get("/:id", bookingController.getBookingByUserId);
 // Router.update("/:id", bookingController.updateBooking);
 // Router.delete("/{id", bookingController.deleteBooking);
