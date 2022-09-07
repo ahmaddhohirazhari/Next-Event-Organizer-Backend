@@ -44,7 +44,10 @@ module.exports = {
     new Promise((resolve, reject) => {
       supabase
         .from("booking")
-        .select("*")
+        .select(
+          `*,
+        bookingSectinon(*)`
+        )
         .match({ userId: id })
         .then((result) => {
           if (!result.error) {
