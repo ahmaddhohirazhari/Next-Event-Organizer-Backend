@@ -40,15 +40,15 @@ module.exports = {
           }
         });
     }),
-  getBookingByUserId: (id) =>
+  getBookingByUserId: (userId) =>
     new Promise((resolve, reject) => {
       supabase
         .from("booking")
         .select(
           `*,
-        bookingSectinon(*)`
+        bookingSection(*)`
         )
-        .match({ userId: id })
+        .match({ userId })
         .then((result) => {
           if (!result.error) {
             resolve(result);

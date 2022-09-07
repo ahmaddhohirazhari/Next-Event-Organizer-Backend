@@ -68,15 +68,14 @@ module.exports = {
   },
   getBookingByUserId: async (request, response) => {
     try {
-      const { id } = request.params;
+      const { userId } = request.params;
 
-      const result = await bookingModel.getBookingByUserId(id);
-
+      const result = await bookingModel.getBookingByUserId(userId);
       if (result.data.length < 1) {
         return wrapper.response(
           response,
           404,
-          `User By user Id ${id} Not Found`,
+          `User By user Id ${userId} Not Found`,
           []
         );
       }
