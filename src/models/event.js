@@ -30,13 +30,8 @@ module.exports = {
           }
         });
     }),
-  // new Promise(async (resolve, reject) => {
-  //   const result = await supabase.from("Event").select("*");
-  //   console.log(result);
-  // }),
   getEventById: (eventId) =>
     new Promise((resolve, reject) => {
-      // SELECT * FROM Event WHERE eventId = "123"
       supabase
         .from("event")
         .select("*")

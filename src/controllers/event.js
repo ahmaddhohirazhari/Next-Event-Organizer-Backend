@@ -13,7 +13,6 @@ module.exports = {
 
       const totalPage = Math.ceil(totalData / limit);
       const pagination = {
-        // page, totalPage, limit, totalData
         page,
         totalPage,
         limit,
@@ -32,7 +31,6 @@ module.exports = {
         pagination
       );
     } catch (error) {
-      // console.log(error);
       const {
         status = 500,
         statusText = "Internal Server Error",

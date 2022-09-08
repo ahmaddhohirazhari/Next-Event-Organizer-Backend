@@ -110,4 +110,41 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
+  updateWishlist: async (request, response) => {
+    try {
+      const { id } = request.params;
+      const { eventId, userId } = request.body;
+
+      const checkId = await wishlistModel.updateWishlist(id);
+
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${id} Not Found`,
+          []
+        );
+      }
+      const setWishlist = {
+        eventId,
+        userId,
+      };
+
+      const result = await wishlistModel.updateWishlist(id, setWishlist);
+
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Update Data",
+        result.data
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
 };

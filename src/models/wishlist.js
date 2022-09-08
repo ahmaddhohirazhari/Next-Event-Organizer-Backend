@@ -47,7 +47,6 @@ module.exports = {
     }),
   getWishlistById: (wishlistId) =>
     new Promise((resolve, reject) => {
-      // SELECT * FROM WIshlist WHERE WIshlistId = "123"
       supabase
         .from("wishlist")
         .select("*")
@@ -74,7 +73,18 @@ module.exports = {
           }
         });
     }),
-  // updateWishlist:()=>{
-
-  // }
+  updateWishlist: (id, data) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("wishlist")
+        .update(data)
+        .eq("wishlishId", id)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
 };
