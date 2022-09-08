@@ -86,9 +86,9 @@ module.exports = {
       const {
         status = 500,
         statusText = "Internal Server Error",
-        error: errorWishlist = null,
+        error: errorData = null,
       } = error;
-      return wrapper.response(response, status, statusText, errorWishlist);
+      return wrapper.response(response, status, statusText, errorData);
     }
   },
   deleteWishlist: async (request, response) => {

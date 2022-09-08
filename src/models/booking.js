@@ -57,32 +57,4 @@ module.exports = {
           }
         });
     }),
-  updateBooking: (id, data) =>
-    new Promise((resolve, reject) => {
-      supabase
-        .from("booking")
-        .update(data)
-        .eq("bookingId", id)
-        .then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
-    }),
-  deleteBooking: (id, data) =>
-    new Promise((resolve, reject) => {
-      supabase
-        .from("booking")
-        .delete(data)
-        .eq("bookingId", id)
-        .then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
-    }),
 };

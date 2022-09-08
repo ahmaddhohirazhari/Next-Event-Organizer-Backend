@@ -45,12 +45,12 @@ module.exports = {
           }
         });
     }),
-  getWishlistById: (wishlistId) =>
+  getWishlistById: (id) =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
         .select("*")
-        .eq("wishlistId", wishlistId)
+        .eq("wishlistId", id)
         .then((result) => {
           if (!result.error) {
             resolve(result);
