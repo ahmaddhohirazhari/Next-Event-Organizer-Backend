@@ -71,7 +71,7 @@ module.exports = {
         return wrapper.response(
           response,
           404,
-          `Wishlist By WishlistId ${id} Not Found`,
+          `Wishlist By wishlistId ${id} Not Found`,
           []
         );
       }
@@ -79,7 +79,7 @@ module.exports = {
       return wrapper.response(
         response,
         result.status,
-        "Success Get Wishlist By Id",
+        "Success Get Wishlis By Id",
         result.data
       );
     } catch (error) {
