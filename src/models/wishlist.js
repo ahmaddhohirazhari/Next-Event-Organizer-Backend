@@ -73,18 +73,4 @@ module.exports = {
           }
         });
     }),
-  updateWishlist: (id, data) =>
-    new Promise((resolve, reject) => {
-      supabase
-        .from("wishlist")
-        .update(data)
-        .eq("wishlishId", id)
-        .then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
-    }),
 };
