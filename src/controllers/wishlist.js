@@ -79,7 +79,7 @@ module.exports = {
       return wrapper.response(
         response,
         result.status,
-        "Success Get Wishlis By Id",
+        "Success Get Wishlist By Id",
         result.data
       );
     } catch (error) {
