@@ -29,8 +29,8 @@ module.exports = {
     try {
       let { page, limit } = request.query;
       const { userId } = request.params;
-      page = +page;
-      limit = +limit;
+      page = +page || 1;
+      limit = +limit || 3;
 
       const totalData = await wishlistModel.getCountWishlist();
 

@@ -52,8 +52,8 @@ module.exports = {
     try {
       let { page, limit } = request.query;
       const { userId } = request.params;
-      page = +page;
-      limit = +limit;
+      page = +page || 1;
+      limit = +limit || 5;
 
       const totalData = await bookingModel.getCountBooking();
       const totalPage = Math.ceil(totalData / limit);
@@ -65,6 +65,7 @@ module.exports = {
       };
 
       const offset = page * limit - limit;
+
       const result = await bookingModel.getAllBooking(offset, limit, userId);
       return wrapper.response(
         response,
