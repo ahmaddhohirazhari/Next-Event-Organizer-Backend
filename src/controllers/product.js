@@ -1,4 +1,3 @@
-const { request } = require("express");
 const productModel = require("../models/product");
 const wrapper = require("../utils/wrapper");
 
@@ -23,8 +22,8 @@ module.exports = {
   },
   getAllProduct: async (request, response) => {
     try {
-      console.log(request.query);
-      let { page, limit } = request.query;
+      // console.log(request.query);
+      let { page, limit, search, sort, sortType } = request.query;
       page = +page;
       limit = +limit;
 
@@ -40,6 +39,12 @@ module.exports = {
 
       const offset = page * limit - limit;
 
+      // if (sortType.toLowerCase() === "asc") {
+      //   sortType = true;
+      // } else {
+      //   sortType = false;
+      // }
+
       const result = await productModel.getAllProduct(offset, limit);
       return wrapper.response(
         response,
@@ -49,7 +54,7 @@ module.exports = {
         pagination
       );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const {
         status = 500,
         statusText = "Internal Server Error",
@@ -69,14 +74,14 @@ module.exports = {
 
       const result = await productModel.getProductById(id);
 
-      if (result.data.length < 1) {
-        return wrapper.response(
-          response,
-          404,
-          `Data By Id ${id} Not Found`,
-          []
-        );
-      }
+      // if (result.data.length < 1) {
+      //   return wrapper.response(
+      //     response,
+      //     404,
+      //     `Data By Id ${id} Not Found`,
+      //     []
+      //   );
+      // }
 
       return wrapper.response(
         response,
@@ -95,7 +100,7 @@ module.exports = {
   },
   createProduct: async (request, response) => {
     try {
-      console.log(request.body);
+      // console.log(request.body);
       const { name, price } = request.body;
       const setData = {
         name,
@@ -121,8 +126,8 @@ module.exports = {
   },
   updateProduct: async (request, response) => {
     try {
-      console.log(request.params);
-      console.log(request.body);
+      // console.log(request.params);
+      // console.log(request.body);
       const { id } = request.params;
       const { name, price } = request.body;
 
@@ -140,7 +145,10 @@ module.exports = {
       const setData = {
         name,
         price,
+        // updatedAt: ...
       };
+
+      // bikin proses untuk ngecek apakah semua property di daam setData ada isinya ?
 
       const result = await productModel.updateProduct(id, setData);
 
