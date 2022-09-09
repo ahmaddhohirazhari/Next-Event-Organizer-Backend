@@ -4,6 +4,7 @@ const Router = express.Router();
 
 const productController = require("../controllers/product");
 const authMiddleware = require("../middleware/auth");
+const uploadMiddleware = require("../middleware/uploadFile");
 
 // Router.get("/greetings", async (request, response) => {
 // try {
@@ -21,11 +22,15 @@ Router.get("/greetings", productController.showGreetings);
 Router.get(
   "/",
   authMiddleware.authentication,
-  authMiddleware.authorization,
+  authMiddleware.isAdmin,
   productController.getAllProduct
 );
 Router.get("/:id", productController.getProductById);
-Router.post("/", productController.createProduct);
+Router.post(
+  "/",
+  uploadMiddleware.uploadProduct,
+  productController.createProduct
+);
 Router.patch("/:id", productController.updateProduct);
 Router.delete("/:id", productController.deleteProduct);
 

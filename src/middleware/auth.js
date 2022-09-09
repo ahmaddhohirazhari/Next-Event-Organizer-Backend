@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const jwt = require("jsonwebtoken");
 const wrapper = require("../utils/wrapper");
 
@@ -31,7 +30,7 @@ module.exports = {
       console.log(error);
     }
   },
-  authorization: async (request, response, next) => {
+  isAdmin: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
       // console.log(request.decodeToken);
