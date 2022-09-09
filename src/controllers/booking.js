@@ -50,12 +50,28 @@ module.exports = {
   },
   getAllBooking: async (request, response) => {
     try {
-      const result = await bookingModel.getAllBooking();
+      let { page, limit } = request.query;
+      const { userId } = request.params;
+      page = +page;
+      limit = +limit;
+
+      const totalData = await bookingModel.getCountBooking();
+      const totalPage = Math.ceil(totalData / limit);
+      const pagination = {
+        page,
+        totalPage,
+        limit,
+        totalData,
+      };
+
+      const offset = page * limit - limit;
+      const result = await bookingModel.getAllBooking(offset, limit, userId);
       return wrapper.response(
         response,
         result.status,
         "Success Get Data Booking !",
-        result.data
+        result.data,
+        pagination
       );
     } catch (error) {
       const {

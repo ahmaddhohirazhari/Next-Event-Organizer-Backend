@@ -27,11 +27,13 @@ module.exports = {
           }
         });
     }),
-  getAllBooking: () =>
+  getAllBooking: (offset, limit, id) =>
     new Promise((resolve, reject) => {
       supabase
         .from("booking")
-        .select("*")
+        .select(`*,bookingSection(sectionId,section,statusUsed)`)
+        .eq("userId", id)
+        .range(offset, offset + limit - 1)
         .then((result) => {
           if (!result.error) {
             resolve(result);
@@ -46,12 +48,25 @@ module.exports = {
         .from("booking")
         .select(
           `*,
-        bookingSection(*)`
+        bookingSection(sectionId,section,statusUsed)`
         )
         .match({ userId })
         .then((result) => {
           if (!result.error) {
             resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
+  getCountBooking: () =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("booking")
+        .select("*", { count: "exact" })
+        .then((result) => {
+          if (!result.error) {
+            resolve(result.count);
           } else {
             reject(result);
           }
