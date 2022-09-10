@@ -73,6 +73,7 @@ module.exports = {
     try {
       const { name, category, location, detail, dateTimeShow, price } =
         request.body;
+      const { filename, mimetype } = request.file;
       const setEvent = {
         name,
         category,
@@ -80,6 +81,7 @@ module.exports = {
         detail,
         dateTimeShow,
         price,
+        image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
 
       const result = await eventModel.createEvent(setEvent);

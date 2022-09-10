@@ -4,6 +4,9 @@ const Router = express.Router();
 
 const eventController = require("../controllers/event");
 
+const authMiddleware = require("../middleware/auth");
+const uploadMiddleware = require("../middleware/uploadFile");
+
 // Router.get("/greetings", async (request, response) => {
 // try {
 //     response.status(200).send("Hello World!");
@@ -16,9 +19,15 @@ const eventController = require("../controllers/event");
 // Path Read
 // Path Update
 // Path Delete
-Router.get("/", eventController.getAllEvent);
+Router.get(
+  "/",
+  authMiddleware.authentication,
+  authMiddleware.isAdmin,
+  eventController.getAllEvent
+);
+
 Router.get("/:id", eventController.getEventById);
-Router.post("/", eventController.createEvent);
+Router.post("/", uploadMiddleware.uploadEvent, eventController.createEvent);
 Router.delete("/:id", eventController.deleteEvent);
 Router.patch("/:id", eventController.updateEvent);
 

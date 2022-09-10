@@ -28,7 +28,55 @@ module.exports = {
     const storage = new CloudinaryStorage({
       cloudinary,
       params: {
-        folder: "Event-Organizing/Product",
+        folder: "Next-Event-Organizer/Event",
+      },
+    });
+
+    const upload = multer({ storage }).single("image");
+
+    upload(request, response, (err) => {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        return wrapper.response(response, 401, err.message, null);
+      }
+      if (err) {
+        // An unknown error occurred when uploading.
+        return wrapper.response(response, 401, err.message, null);
+      }
+
+      // Everything went fine.
+      next();
+    });
+  },
+  uploadEvent: (request, response, next) => {
+    const storage = new CloudinaryStorage({
+      cloudinary,
+      params: {
+        folder: "Next-Event-Organizer/Event",
+      },
+    });
+
+    const upload = multer({ storage }).single("image");
+
+    upload(request, response, (err) => {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        return wrapper.response(response, 401, err.message, null);
+      }
+      if (err) {
+        // An unknown error occurred when uploading.
+        return wrapper.response(response, 401, err.message, null);
+      }
+
+      // Everything went fine.
+      next();
+    });
+  },
+  uploadUser: (request, response, next) => {
+    const storage = new CloudinaryStorage({
+      cloudinary,
+      params: {
+        folder: "Next-Event-Organizer/Event",
       },
     });
 

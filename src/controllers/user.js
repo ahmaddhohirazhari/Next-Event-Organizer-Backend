@@ -61,7 +61,9 @@ module.exports = {
         dateOfBirth,
         email,
         password,
+        image,
       } = request.body;
+      const { filename, mimetype } = request.file;
       const setUser = {
         name,
         username,
@@ -71,6 +73,7 @@ module.exports = {
         dateOfBirth,
         email,
         password,
+        image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
       const result = await userModel.createUser(setUser);
       return wrapper.response(
