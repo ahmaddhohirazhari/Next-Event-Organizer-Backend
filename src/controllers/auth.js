@@ -24,7 +24,6 @@ module.exports = {
   },
   register: async (request, response) => {
     try {
-      // const encryptedPassword = encryptPassword(password, "signatrue");
       console.log(request.body);
       const {
         name,
@@ -38,6 +37,24 @@ module.exports = {
         role,
       } = request.body;
       const { filename, mimetype } = request.file;
+
+      // 2. PROSES VALIDASI PASSWORD
+      if (password.length < 6) {
+        return wrapper.response(
+          response,
+          400,
+          "At Least 6 Character Password",
+          null
+        );
+      }
+
+      const encryptedPassword = encryptPassword(password, {
+        min: 6,
+        max: 24,
+        pattern: /^\w{6,24}$/,
+        signature: "signature",
+      });
+
       const setData = {
         name,
         username,
@@ -46,38 +63,16 @@ module.exports = {
         nationality,
         dateOfBirth,
         email,
-        password,
+        password: encryptedPassword, // UNTUK PASSWORD BISA DI ENKRIPSI
         role,
         image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
 
-      // const setData = {
-      //   name,
-      //   username,
-      //   gender,
-      //   profession,
-      //   nationality,
-      //   dateOfBirth,
-      //   email,
-      //   password: encryptedPassword, // UNTUK PASSWORD BISA DI ENKRIPSI
-      //   // image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
-      // };
-
       // PROSES PENGECEKAN APAKAH EMAIL YANG MAU DI DAFTARKAN SUDAH ADA ATAU BELUM ?
-      // const checkEmail = await authModel.getUserByEmail(email);
-      // if (checkEmail.data[0].email === setData.email) {
-      //   return wrapper.response(response, 404, "Email Already Registed", null);
-      // }
-
-      // 2. PROSES VALIDASI PASSWORD
-      // if (password.length > 5) {
-      //   return wrapper.response(
-      //     response,
-      //     400,
-      //     "At Least 6 Character Password",
-      //     null
-      //   );
-      // }
+      const checkEmail = await authModel.getUserByEmail(email);
+      if (checkEmail.data.length > 0) {
+        return wrapper.response(response, 404, "Email Alredy Registered", null);
+      }
 
       // PROSES MENYIMPAN DATA KE DATABASE LEWAT MODEL
       const result = await authModel.register(setData);
