@@ -45,7 +45,7 @@ module.exports = {
       }
 
       // Everything went fine.
-      next();
+      return next();
     });
   },
   uploadEvent: (request, response, next) => {
@@ -69,14 +69,14 @@ module.exports = {
       }
 
       // Everything went fine.
-      next();
+      return next();
     });
   },
   uploadUser: (request, response, next) => {
     const storage = new CloudinaryStorage({
       cloudinary,
       params: {
-        folder: "Next-Event-Organizer/Event",
+        folder: "Next-Event-Organizer/User",
       },
     });
 
@@ -93,7 +93,7 @@ module.exports = {
       }
 
       // Everything went fine.
-      next();
+      return next();
     });
   },
 };

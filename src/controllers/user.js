@@ -61,7 +61,6 @@ module.exports = {
         dateOfBirth,
         email,
         password,
-        image,
       } = request.body;
       const { filename, mimetype } = request.file;
       const setUser = {

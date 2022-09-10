@@ -28,7 +28,7 @@ Router.get(
 Router.get("/:id", productController.getProductById);
 Router.post(
   "/",
-  // uploadMiddleware.uploadProduct,
+  uploadMiddleware.uploadProduct,
   productController.createProduct
 );
 Router.patch("/:id", productController.updateProduct);
