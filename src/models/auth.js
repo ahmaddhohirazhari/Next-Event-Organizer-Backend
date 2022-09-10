@@ -1,7 +1,7 @@
 const supabase = require("../config/supabase");
 
 module.exports = {
-  showGreetings: () => new Promise((resolve, reject) => {}),
+  // showGreetings: () => new Promise((resolve, reject) => {}),
   getUserByEmail: (email) =>
     new Promise((resolve, reject) => {
       supabase
@@ -16,12 +16,11 @@ module.exports = {
           }
         });
     }),
-  createPassword: (password) =>
+  register: (data) =>
     new Promise((resolve, reject) => {
       supabase
         .from("user")
-        .insert([password])
-        .eq("password", password)
+        .insert([data])
         .then((result) => {
           if (!result.error) {
             resolve(result);

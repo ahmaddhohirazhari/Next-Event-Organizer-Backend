@@ -52,6 +52,7 @@ module.exports = {
   },
   createUser: async (request, response) => {
     try {
+      console.log(request.body);
       const {
         name,
         username,

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const encryptPassword = require("encrypt-password");
 const authModel = require("../models/auth");
 const wrapper = require("../utils/wrapper");
 
@@ -23,22 +24,69 @@ module.exports = {
   },
   register: async (request, response) => {
     try {
-      const { email, password } = request.body;
+      // const encryptedPassword = encryptPassword(password, "signatrue");
       console.log(request.body);
-      const setData = {
+      const {
+        name,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
         email,
-        password, // UNTUK PASSWORD BISA DI ENKRIPSI
+        password,
+        role,
+      } = request.body;
+      const { filename, mimetype } = request.file;
+      const setData = {
+        name,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
+        email,
+        password,
+        role,
+        image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
 
+      // const setData = {
+      //   name,
+      //   username,
+      //   gender,
+      //   profession,
+      //   nationality,
+      //   dateOfBirth,
+      //   email,
+      //   password: encryptedPassword, // UNTUK PASSWORD BISA DI ENKRIPSI
+      //   // image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
+      // };
+
       // PROSES PENGECEKAN APAKAH EMAIL YANG MAU DI DAFTARKAN SUDAH ADA ATAU BELUM ?
+      // const checkEmail = await authModel.getUserByEmail(email);
+      // if (checkEmail.data[0].email === setData.email) {
+      //   return wrapper.response(response, 404, "Email Already Registed", null);
+      // }
+
+      // 2. PROSES VALIDASI PASSWORD
+      // if (password.length > 5) {
+      //   return wrapper.response(
+      //     response,
+      //     400,
+      //     "At Least 6 Character Password",
+      //     null
+      //   );
+      // }
 
       // PROSES MENYIMPAN DATA KE DATABASE LEWAT MODEL
-      console.log(setData);
+      const result = await authModel.register(setData);
+
       return wrapper.response(
         response,
-        200,
-        "Success Get Greetings",
-        "Hello World !"
+        result.status,
+        "Successfully Registered",
+        result.data
       );
     } catch (error) {
       const {
@@ -52,11 +100,11 @@ module.exports = {
   login: async (request, response) => {
     try {
       const { email, password } = request.body;
-      console.log(request.body);
-      const setData = {
-        email,
-        password, // UNTUK PASSWORD BISA DI ENKRIPSI
-      };
+
+      // const setLogin = {
+      //   email,
+      //   password, // UNTUK PASSWORD BISA DI ENKRIPSI
+      // };
       // 1. PROSES PENGECEKAN EMAIL
       const checkEmail = await authModel.getUserByEmail(email);
       if (checkEmail.data.length < 1) {
@@ -80,7 +128,8 @@ module.exports = {
       };
 
       const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" });
-      // 4. PROSES REPON KE USER
+
+      // 4. PROSES RESPON KE USER
       return wrapper.response(response, 200, "Success Login", {
         userId: payload.userId,
         token,

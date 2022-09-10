@@ -33,8 +33,23 @@ module.exports = {
   isAdmin: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
-      // console.log(request.decodeToken);
+      if (error) {
+      }
       next();
+      // console.log(request.decodeToken);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  isUser: async (request, response, next) => {
+    try {
+      // PROSES UNTUK PENGECEKAN ROLE
+      if (error) {
+        return wrapper.response(response, 403, error.message, null);
+      }
+
+      return next();
+      // console.log(request.decodeToken);
     } catch (error) {
       console.log(error);
     }
