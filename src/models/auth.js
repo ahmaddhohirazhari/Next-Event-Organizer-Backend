@@ -16,4 +16,18 @@ module.exports = {
           }
         });
     }),
+  createPassword: (password) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("user")
+        .insert([password])
+        .eq("password", password)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
 };

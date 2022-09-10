@@ -24,7 +24,7 @@ module.exports = {
   register: async (request, response) => {
     try {
       const { email, password } = request.body;
-
+      console.log(request.body);
       const setData = {
         email,
         password, // UNTUK PASSWORD BISA DI ENKRIPSI
@@ -52,7 +52,11 @@ module.exports = {
   login: async (request, response) => {
     try {
       const { email, password } = request.body;
-
+      console.log(request.body);
+      const setData = {
+        email,
+        password, // UNTUK PASSWORD BISA DI ENKRIPSI
+      };
       // 1. PROSES PENGECEKAN EMAIL
       const checkEmail = await authModel.getUserByEmail(email);
       if (checkEmail.data.length < 1) {
