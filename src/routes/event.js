@@ -20,15 +20,16 @@ const uploadMiddleware = require("../middleware/uploadFile");
 // Path Read
 // Path Update
 // Path Delete
-Router.get(
+Router.get("/", eventController.getAllEvent);
+
+Router.get("/:id", eventController.getEventById);
+Router.post(
   "/",
   authMiddleware.authentication,
   authMiddleware.isAdmin,
-  eventController.getAllEvent
+  uploadMiddleware.uploadEvent,
+  eventController.createEvent
 );
-
-Router.get("/:id", eventController.getEventById);
-Router.post("/", uploadMiddleware.uploadEvent, eventController.createEvent);
 Router.delete("/:id", eventController.deleteEvent);
 Router.patch("/:id", eventController.updateEvent);
 

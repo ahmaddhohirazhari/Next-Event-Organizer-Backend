@@ -11,6 +11,7 @@ module.exports = {
       }
 
       token = token.split(" ")[1];
+      console.log(token);
 
       jwt.verify(token, "RAHASIA", (error, result) => {
         if (error) {
@@ -24,34 +25,48 @@ module.exports = {
         //     exp: 1662783052
         //   }
         request.decodeToken = result;
-        next();
+        return next();
       });
     } catch (error) {
-      console.log(error);
+      return error.error;
     }
   },
   isAdmin: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
-      if (error) {
-      }
-      next();
+      let token = request.headers.authorization;
+      token = token.split(" ")[1];
+
+      jwt.verify(token, "RAHASIA", (error, result) => {
+        console.log(result.role);
+        if (result.role === "user") {
+          return wrapper.response(response, 403, error.message, null);
+        }
+
+        next();
+      });
+
       // console.log(request.decodeToken);
     } catch (error) {
-      console.log(error);
+      return error.error;
     }
   },
   isUser: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
-      if (error) {
-        return wrapper.response(response, 403, error.message, null);
-      }
+      let token = request.headers.authorization;
+      token = token.split(" ")[1];
+      jwt.verify(token, "RAHASIA", (error, result) => {
+        if (result.role === "Admin") {
+          return wrapper.response(response, 403, error.message, null);
+        }
+        console.log(result);
+        next();
+      });
 
-      return next();
       // console.log(request.decodeToken);
     } catch (error) {
-      console.log(error);
+      return error.error;
     }
   },
 };

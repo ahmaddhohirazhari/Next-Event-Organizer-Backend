@@ -38,7 +38,7 @@ module.exports = {
 
       const { filename, mimetype } = request.file;
 
-      // 2. PROSES VALIDASI PASSWORD
+      // PROSES VALIDASI PASSWORD
       if (password.length < 6) {
         return wrapper.response(
           response,
@@ -48,13 +48,13 @@ module.exports = {
         );
       }
 
+      // PROSES ENCRYPT PASSWORD
       const encryptedPassword = encryptPassword(password, {
         min: 6,
         max: 24,
         pattern: /^\w{6,24}$/,
         signature: "signature",
       });
-      console.log(encryptedPassword);
 
       const setData = {
         name,
@@ -96,7 +96,13 @@ module.exports = {
   login: async (request, response) => {
     try {
       const { email, password } = request.body;
-
+      const encryptedPassword = encryptPassword(password, {
+        min: 6,
+        max: 24,
+        pattern: /^\w{6,24}$/,
+        signature: "signature",
+      });
+      console.log(request.body);
       // const setLogin = {
       //   email,
       //   password, // UNTUK PASSWORD BISA DI ENKRIPSI
@@ -108,7 +114,7 @@ module.exports = {
       }
 
       // 2. PROSES PENCOCOKAN PASSWORD
-      if (password !== checkEmail.data[0].password) {
+      if (encryptedPassword !== checkEmail.data[0].password) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
 
@@ -122,10 +128,12 @@ module.exports = {
         userId: checkEmail.data[0].userId,
         role: !checkEmail.data[0].role ? "user" : checkEmail.data[0].role,
       };
+      console.log(payload.role);
 
       const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" });
-
+      console.log(payload.role);
       // 4. PROSES RESPON KE USER
+      console.log(token);
       return wrapper.response(response, 200, "Success Login", {
         userId: payload.userId,
         token,
