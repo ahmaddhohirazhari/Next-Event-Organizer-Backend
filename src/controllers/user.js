@@ -75,6 +75,7 @@ module.exports = {
         password,
         image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
+      console.log(setUser);
       const result = await userModel.createUser(setUser);
       return wrapper.response(
         response,

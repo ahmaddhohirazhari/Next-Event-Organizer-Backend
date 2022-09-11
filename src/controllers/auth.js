@@ -24,7 +24,6 @@ module.exports = {
   },
   register: async (request, response) => {
     try {
-      console.log(request.body);
       const {
         name,
         username,
@@ -36,6 +35,7 @@ module.exports = {
         password,
         role,
       } = request.body;
+
       const { filename, mimetype } = request.file;
 
       // 2. PROSES VALIDASI PASSWORD
@@ -54,6 +54,7 @@ module.exports = {
         pattern: /^\w{6,24}$/,
         signature: "signature",
       });
+      console.log(encryptedPassword);
 
       const setData = {
         name,
