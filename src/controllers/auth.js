@@ -24,19 +24,7 @@ module.exports = {
   },
   register: async (request, response) => {
     try {
-      const {
-        name,
-        username,
-        gender,
-        profession,
-        nationality,
-        dateOfBirth,
-        email,
-        password,
-        role,
-      } = request.body;
-
-      const { filename, mimetype } = request.file;
+      const { username, email, password } = request.body;
 
       // PROSES VALIDASI PASSWORD
       if (password.length < 6) {
@@ -57,16 +45,9 @@ module.exports = {
       });
 
       const setData = {
-        name,
         username,
-        gender,
-        profession,
-        nationality,
-        dateOfBirth,
         email,
         password: encryptedPassword, // UNTUK PASSWORD BISA DI ENKRIPSI
-        role,
-        image: filename ? `${filename}.${mimetype.split("/")[1]}` : "",
       };
 
       // PROSES PENGECEKAN APAKAH EMAIL YANG MAU DI DAFTARKAN SUDAH ADA ATAU BELUM ?
@@ -77,12 +58,13 @@ module.exports = {
 
       // PROSES MENYIMPAN DATA KE DATABASE LEWAT MODEL
       const result = await authModel.register(setData);
+      const newResult = { userId: result.data[0].userId };
 
       return wrapper.response(
         response,
         result.status,
         "Successfully Registered",
-        result.data
+        newResult
       );
     } catch (error) {
       const {
@@ -102,11 +84,7 @@ module.exports = {
         pattern: /^\w{6,24}$/,
         signature: "signature",
       });
-      console.log(request.body);
-      // const setLogin = {
-      //   email,
-      //   password, // UNTUK PASSWORD BISA DI ENKRIPSI
-      // };
+
       // 1. PROSES PENGECEKAN EMAIL
       const checkEmail = await authModel.getUserByEmail(email);
       if (checkEmail.data.length < 1) {
@@ -128,12 +106,10 @@ module.exports = {
         userId: checkEmail.data[0].userId,
         role: !checkEmail.data[0].role ? "user" : checkEmail.data[0].role,
       };
-      console.log(payload.role);
 
       const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" });
-      console.log(payload.role);
+
       // 4. PROSES RESPON KE USER
-      console.log(token);
       return wrapper.response(response, 200, "Success Login", {
         userId: payload.userId,
         token,
