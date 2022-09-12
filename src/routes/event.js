@@ -8,6 +8,8 @@ const authMiddleware = require("../middleware/auth");
 // eslint-disable-next-line import/no-unresolved
 const uploadMiddleware = require("../middleware/uploadFile");
 
+// const deleteMiddleware = require("../middleware/deleteFile");
+
 // Router.get("/greetings", async (request, response) => {
 // try {
 //     response.status(200).send("Hello World!");
@@ -30,7 +32,11 @@ Router.post(
   uploadMiddleware.uploadEvent,
   eventController.createEvent
 );
-Router.delete("/:id", eventController.deleteEvent);
+Router.delete(
+  "/:id",
+  // deleteMiddleware.deleteEvent,
+  eventController.deleteEvent
+);
 Router.patch("/:id", eventController.updateEvent);
 
 module.exports = Router;

@@ -1,5 +1,6 @@
 const eventModel = require("../models/event");
 const wrapper = require("../utils/wrapper");
+const cloudinary = require("../config/cloudinary");
 
 module.exports = {
   getAllEvent: async (request, response) => {
@@ -71,6 +72,7 @@ module.exports = {
   },
   createEvent: async (request, response) => {
     try {
+      console.log(request.file);
       const { name, category, location, detail, dateTimeShow, price } =
         request.body;
       const { filename, mimetype } = request.file;
@@ -105,6 +107,16 @@ module.exports = {
     try {
       const { id } = request.params;
       const result = await eventModel.deleteEvent(id);
+      const { image } = result.data[0];
+      const fileName = image.split("/")[2];
+      const imageId = fileName.split(".")[0];
+
+      console.log(imageId);
+
+      cloudinary.uploader.destroy(imageId, (result) => {
+        console.log(result);
+      });
+
       return wrapper.response(
         response,
         result.status,
