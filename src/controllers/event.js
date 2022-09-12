@@ -108,14 +108,17 @@ module.exports = {
       const { id } = request.params;
       const result = await eventModel.deleteEvent(id);
       const { image } = result.data[0];
-      const fileName = image.split("/")[2];
-      const imageId = fileName.split(".")[0];
+      const fileName = image.split(".")[0];
+      // const imageId = fileName.split(".")[0];
 
-      console.log(imageId);
+      console.log(fileName);
 
-      cloudinary.uploader.destroy(imageId, (result) => {
-        console.log(result);
-      });
+      const deleteFile = await cloudinary.uploader.destroy(
+        fileName,
+        (result) => {
+          console.log(result);
+        }
+      );
 
       return wrapper.response(
         response,
