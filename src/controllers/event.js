@@ -109,10 +109,10 @@ module.exports = {
       const result = await eventModel.deleteEvent(id);
       const { image } = result.data[0];
       const fileName = image.split(".")[0];
-      // const imageId = fileName.split(".")[0];
 
       console.log(fileName);
 
+      // PROSES DELETE FILE DI CLOUDINARY
       const deleteFile = await cloudinary.uploader.destroy(
         fileName,
         (result) => {
@@ -138,11 +138,10 @@ module.exports = {
   updateEvent: async (request, response) => {
     try {
       const { id } = request.params;
+      console.log(request.params);
       const { name, category, location, detail, dateTimeShow, price } =
         request.body;
-
       const checkId = await eventModel.getEventById(id);
-
       if (checkId.data.length < 1) {
         return wrapper.response(
           response,
@@ -151,6 +150,17 @@ module.exports = {
           []
         );
       }
+      let image;
+      if (request.file) {
+        const { filename, mimetype } = request.file;
+        image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
+        // PROSES DELETE FILE DI CLOUDINARY
+        await cloudinary.uploader.destroy(image, (result) => {
+          console.log(result);
+        });
+      }
+      console.log(request.body);
+
       const setData = {
         name,
         category,
@@ -158,8 +168,9 @@ module.exports = {
         detail,
         dateTimeShow,
         price,
+        image,
       };
-
+      console.log(setData);
       const result = await eventModel.updateEvent(id, setData);
 
       return wrapper.response(

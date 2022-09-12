@@ -37,6 +37,6 @@ Router.delete(
   // deleteMiddleware.deleteEvent,
   eventController.deleteEvent
 );
-Router.patch("/:id", eventController.updateEvent);
+Router.patch("/:id", uploadMiddleware.uploadEvent, eventController.updateEvent);
 
 module.exports = Router;
