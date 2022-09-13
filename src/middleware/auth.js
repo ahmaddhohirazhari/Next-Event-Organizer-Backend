@@ -43,7 +43,7 @@ module.exports = {
           return wrapper.response(response, 403, error.message, null);
         }
 
-        next();
+        return next();
       });
 
       // console.log(request.decodeToken);

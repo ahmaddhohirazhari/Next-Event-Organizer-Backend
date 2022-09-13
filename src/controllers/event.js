@@ -167,7 +167,11 @@ module.exports = {
       let image;
       if (request.file) {
         const { filename, mimetype } = request.file;
+
+        console.log(filename);
+        console.log(mimetype);
         image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
+        console.log(image);
         // PROSES DELETE FILE DI CLOUDINARY
         await cloudinary.uploader.destroy(image, (result) => result);
       }

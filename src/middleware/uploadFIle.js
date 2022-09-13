@@ -31,7 +31,6 @@ module.exports = {
         folder: "Next-Event-Organizer/Event",
       },
     });
-
     const upload = multer({ storage }).single("image");
 
     upload(request, response, (err) => {
@@ -55,8 +54,23 @@ module.exports = {
         folder: "Next-Event-Organizer/Event",
       },
     });
+    const upload = multer({
+      // multer settings
+      storage,
+      fileFilter(req, file, callback) {
+        const ext = file.mimetype.split("/")[1];
+        console.log(ext);
+        if (ext !== "png" && ext !== "jpg" && ext !== "gif" && ext !== "jpeg") {
+          return callback(new Error("Only images are allowed"));
+        }
+        return callback(null, true);
+      },
+      limits: {
+        fileSize: 100,
+      },
+    }).single("image");
 
-    const upload = multer({ storage }).single("image");
+    // const upload = multer({ storage }).single("image");
 
     upload(request, response, (err) => {
       if (err instanceof multer.MulterError) {
