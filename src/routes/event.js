@@ -28,7 +28,7 @@ Router.get("/:id", eventController.getEventById);
 Router.post(
   "/",
   authMiddleware.authentication,
-  authMiddleware.isAdmin,
+  // authMiddleware.isAdmin,
   uploadMiddleware.uploadEvent,
   eventController.createEvent
 );

@@ -82,6 +82,15 @@ module.exports = {
 
     const upload = multer({ storage }).single("image");
 
+    // VALIDASI TYPE FILE AND SIZE
+    // if(){
+
+    // }
+
+    // if(){
+
+    // }
+
     upload(request, response, (err) => {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.

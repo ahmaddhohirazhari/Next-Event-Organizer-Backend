@@ -6,9 +6,9 @@ module.exports = {
   getAllEvent: async (request, response) => {
     try {
       // eslint-disable-next-line prefer-const
-      let { page, limit, name } = request.query;
-      page = +page;
-      limit = +limit;
+      let { page, limit, searchName, searchTimeShow, sort } = request.query;
+      page = +page || 1;
+      limit = +limit || 3;
 
       const totalData = await eventModel.getCountEvent();
 
@@ -22,7 +22,30 @@ module.exports = {
 
       const offset = page * limit - limit;
 
-      const result = await eventModel.getAllEvent(offset, limit, name);
+      // PROSES SET SORTING
+      const setSort = (input) => {
+        if (input.toLowerCase() === "dsc") {
+          return false;
+        }
+        if (input.toLowerCase() === "asc") {
+          return true;
+        }
+        return true;
+      };
+      const newSort = setSort(sort);
+
+      // PROSES SEARCH SHOWTIME
+      const day = new Date(searchTimeShow);
+      const nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
+
+      const result = await eventModel.getAllEvent(
+        offset,
+        limit,
+        searchName,
+        newSort,
+        day,
+        nextDay
+      );
 
       return wrapper.response(
         response,

@@ -14,14 +14,16 @@ module.exports = {
           }
         });
     }),
-  getAllEvent: (offset, limit, name) =>
+  getAllEvent: (offset, limit, name, newSort, day, nextDay) =>
     new Promise((resolve, reject) => {
       supabase
         .from("event")
         .select("*")
         .range(offset, offset + limit - 1)
         .ilike("name", `%${name}%`)
-        .order("createAt", { ascending: true })
+        .order("createAt", { ascending: newSort })
+        .gt("dateTimeShow", `${day.toISOString()}`)
+        .lt("dateTimeShow", `${nextDay.toISOString()}`)
         .then((result) => {
           if (!result.error) {
             resolve(result);
