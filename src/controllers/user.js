@@ -1,3 +1,4 @@
+const encryptPassword = require("encrypt-password");
 const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 const cloudinary = require("../config/cloudinary");
@@ -98,7 +99,8 @@ module.exports = {
     try {
       const { userId } = request.decodeToken;
 
-      const { name } = request.body;
+      const { name, username, gender, profession, nationality, dateOfBirth } =
+        request.body;
       const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
         return wrapper.response(
@@ -118,6 +120,11 @@ module.exports = {
 
       const setData = {
         name,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
         image,
       };
 
@@ -157,16 +164,15 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
-  updateImageUser: async (request, response) => {
+  updateImage: async (request, response) => {
     try {
-      const { id } = request.params;
-      const checkId = await userModel.getUserById(id);
-
+      const { userId } = request.decodeToken;
+      const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
         return wrapper.response(
           response,
           404,
-          `Update By Id ${id} Not Found`,
+          `Update By Id ${userId} Not Found`,
           []
         );
       }
@@ -175,20 +181,96 @@ module.exports = {
         const { filename, mimetype } = request.file;
         image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
         // PROSES DELETE FILE DI CLOUDINARY
-        await cloudinary.uploader.destroy(image, (result) => result);
+        cloudinary.uploader.destroy(image, (result) => result);
       }
 
-      const setUser = {
+      const setData = {
         image,
       };
+      const result = await userModel.updateUser(userId, setData);
+      console.log(result);
+      const newResult = [
+        {
+          userId: result.data[0].userId,
+          image: result.data[0].image,
+          createdAt: result.data[0].createdAt,
+          updatedAt: result.data[0].updatedAt,
+        },
+      ];
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Update Image",
+        newResult
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  updatePassword: async (request, response) => {
+    try {
+      const { userId } = request.decodeToken;
 
-      const result = await userModel.updateUser(id, setUser);
+      const { oldPassword, newPassword, confirmPassword } = request.body;
+      console.log(request.body);
+      const checkId = await userModel.getUserById(userId);
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${userId} Not Found`,
+          []
+        );
+      }
+
+      // VALIDASI OLDPASSWORD
+      const encryptedPassword = encryptPassword(oldPassword, {
+        min: 6,
+        max: 24,
+        pattern: /^\w{6,24}$/,
+        signature: "signature",
+      });
+      console.log(encryptedPassword);
+      console.log(checkId.data[0].password);
+      if (encryptedPassword !== checkId.data[0].password) {
+        return wrapper.response(response, 400, "Wrong Password", null);
+      }
+
+      // CONFIRM NEWPASSWORD
+      if (newPassword !== confirmPassword) {
+        return wrapper.response(response, 400, "Password Not Match", null);
+      }
+
+      const encryptedNewPassword = encryptPassword(oldPassword, {
+        min: 6,
+        max: 24,
+        pattern: /^\w{6,24}$/,
+        signature: "signature",
+      });
+      const setData = {
+        password: encryptedNewPassword,
+      };
+
+      const result = await userModel.updateUser(userId, setData);
+
+      const newResult = [
+        {
+          userId: result.data[0].userId,
+          createdAt: result.data[0].createdAt,
+          updatedAt: result.data[0].updatedAt,
+        },
+      ];
 
       return wrapper.response(
         response,
         result.status,
-        "Success Update Data",
-        result.data
+        "Success Update Password",
+        newResult
       );
     } catch (error) {
       const {

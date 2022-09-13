@@ -4,24 +4,6 @@ const authModel = require("../models/auth");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
-  showGreetings: async (request, response) => {
-    try {
-      // return response.status(200).send("Hello World!");
-      return wrapper.response(
-        response,
-        200,
-        "Success Get Greetings",
-        "Hello World !"
-      );
-    } catch (error) {
-      const {
-        status = 500,
-        statusText = "Internal Server Error",
-        error: errorData = null,
-      } = error;
-      return wrapper.response(response, status, statusText, errorData);
-    }
-  },
   register: async (request, response) => {
     try {
       const { username, email, password } = request.body;
@@ -58,7 +40,7 @@ module.exports = {
 
       // PROSES MENYIMPAN DATA KE DATABASE LEWAT MODEL
       const result = await authModel.register(setData);
-      const newResult = { userId: result.data[0].userId };
+      const newResult = [{ userId: result.data[0].userId }];
 
       return wrapper.response(
         response,
