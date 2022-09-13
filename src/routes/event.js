@@ -40,7 +40,7 @@ Router.delete(
 Router.patch(
   "/:id",
   authMiddleware.authentication,
-  authMiddleware.isAdmin,
+  // authMiddleware.isAdmin,
   uploadMiddleware.uploadEvent,
   eventController.updateEvent
 );

@@ -79,8 +79,27 @@ module.exports = {
         folder: "Next-Event-Organizer/User",
       },
     });
+    const upload = multer({
+      // multer settings
+      storage,
+      fileFilter(req, file, callback) {
+        const ext = file.mimetype;
+        if (
+          ext !== ".png" &&
+          ext !== ".jpg" &&
+          ext !== ".gif" &&
+          ext !== ".jpeg"
+        ) {
+          return callback(new Error("Only images are allowed"));
+        }
+        return callback(null, true);
+      },
+      limits: {
+        fileSize: 1024 * 1024,
+      },
+    }).single("image");
 
-    const upload = multer({ storage }).single("image");
+    // const upload = multer({ storage }).single();
 
     // VALIDASI TYPE FILE AND SIZE
     // if(){
