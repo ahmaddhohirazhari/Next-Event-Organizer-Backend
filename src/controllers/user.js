@@ -188,7 +188,6 @@ module.exports = {
         image,
       };
       const result = await userModel.updateUser(userId, setData);
-      console.log(result);
       const newResult = [
         {
           userId: result.data[0].userId,
@@ -217,7 +216,6 @@ module.exports = {
       const { userId } = request.decodeToken;
 
       const { oldPassword, newPassword, confirmPassword } = request.body;
-      console.log(request.body);
       const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
         return wrapper.response(
@@ -235,8 +233,7 @@ module.exports = {
         pattern: /^\w{6,24}$/,
         signature: "signature",
       });
-      console.log(encryptedPassword);
-      console.log(checkId.data[0].password);
+
       if (encryptedPassword !== checkId.data[0].password) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
