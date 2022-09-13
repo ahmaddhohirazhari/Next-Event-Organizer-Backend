@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const jwt = require("jsonwebtoken");
 const wrapper = require("../utils/wrapper");
 
@@ -11,13 +12,11 @@ module.exports = {
       }
 
       token = token.split(" ")[1];
-      console.log(token);
 
       jwt.verify(token, "RAHASIA", (error, result) => {
         if (error) {
           return wrapper.response(response, 403, error.message, null);
         }
-        console.log(result);
         // result = {
         //     userId: 'ca2973ed-9414-4135-84ac-799b6602d7b2',
         //     role: 'user',
@@ -30,22 +29,23 @@ module.exports = {
     } catch (error) {
       return error.error;
     }
+    return next();
   },
   isAdmin: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
       let token = request.headers.authorization;
+      // eslint-disable-next-line prefer-destructuring
       token = token.split(" ")[1];
 
       jwt.verify(token, "RAHASIA", (error, result) => {
-        console.log(result.role);
         if (result.role === "user") {
           return wrapper.response(response, 403, error.message, null);
         }
 
         return next();
       });
-
+      return next();
       // console.log(request.decodeToken);
     } catch (error) {
       return error.error;
@@ -60,13 +60,13 @@ module.exports = {
         if (result.role === "Admin") {
           return wrapper.response(response, 403, error.message, null);
         }
-        console.log(result);
-        next();
+        return next();
       });
 
       // console.log(request.decodeToken);
     } catch (error) {
       return error.error;
     }
+    return next();
   },
 };

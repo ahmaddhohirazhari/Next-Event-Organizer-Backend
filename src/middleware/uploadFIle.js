@@ -55,11 +55,11 @@ module.exports = {
       },
     });
     const upload = multer({
-      // multer settings
+      // MULTER SETTING
       storage,
+      // FILTERING TYPE AND SIZE FILE
       fileFilter(req, file, callback) {
         const ext = file.mimetype.split("/")[1];
-        console.log(ext);
         if (ext !== "png" && ext !== "jpg" && ext !== "gif" && ext !== "jpeg") {
           return callback(new Error("Only images are allowed"));
         }
@@ -69,8 +69,6 @@ module.exports = {
         fileSize: 100,
       },
     }).single("image");
-
-    // const upload = multer({ storage }).single("image");
 
     upload(request, response, (err) => {
       if (err instanceof multer.MulterError) {
@@ -94,35 +92,20 @@ module.exports = {
       },
     });
     const upload = multer({
-      // multer settings
+      // MULTER SETTING
       storage,
+      // FILTERING TYPE AND SIZE FILE
       fileFilter(req, file, callback) {
-        const ext = file.mimetype;
-        if (
-          ext !== ".png" &&
-          ext !== ".jpg" &&
-          ext !== ".gif" &&
-          ext !== ".jpeg"
-        ) {
+        const ext = file.mimetype.split("/")[1];
+        if (ext !== "png" && ext !== "jpg" && ext !== "gif" && ext !== "jpeg") {
           return callback(new Error("Only images are allowed"));
         }
         return callback(null, true);
       },
       limits: {
-        fileSize: 1024 * 1024,
+        fileSize: 100,
       },
     }).single("image");
-
-    // const upload = multer({ storage }).single();
-
-    // VALIDASI TYPE FILE AND SIZE
-    // if(){
-
-    // }
-
-    // if(){
-
-    // }
 
     upload(request, response, (err) => {
       if (err instanceof multer.MulterError) {
