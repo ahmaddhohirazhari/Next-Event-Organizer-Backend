@@ -1,5 +1,6 @@
 const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
+const cloudinary = require("../config/cloudinary");
 
 module.exports = {
   getAllUser: async (request, response) => {
@@ -52,7 +53,6 @@ module.exports = {
   },
   createUser: async (request, response) => {
     try {
-      console.log(request.body);
       const {
         name,
         username,
@@ -79,7 +79,6 @@ module.exports = {
       };
 
       const result = await userModel.createUser(setUser);
-      console.log(result);
       return wrapper.response(
         response,
         result.status,
@@ -97,31 +96,32 @@ module.exports = {
   },
   updateUser: async (request, response) => {
     try {
-      const { id } = request.params;
-      const { name, username, gender, profession, nationality, dateOfBirth } =
-        request.body;
+      const { userId } = request.decodeToken;
 
-      const checkId = await userModel.getUserById(id);
-
+      const { name } = request.body;
+      const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
         return wrapper.response(
           response,
           404,
-          `Update By Id ${id} Not Found`,
+          `Update By Id ${userId} Not Found`,
           []
         );
       }
+      let image;
+      if (request.file) {
+        const { filename, mimetype } = request.file;
+        image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
+        // PROSES DELETE FILE DI CLOUDINARY
+        cloudinary.uploader.destroy(image, (result) => result);
+      }
 
-      const setUser = {
+      const setData = {
         name,
-        username,
-        gender,
-        profession,
-        nationality,
-        dateOfBirth,
+        image,
       };
 
-      const result = await userModel.updateUser(id, setUser);
+      const result = await userModel.updateUser(userId, setData);
 
       return wrapper.response(
         response,
@@ -146,6 +146,48 @@ module.exports = {
         response,
         result.status,
         "Success Delete User !",
+        result.data
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  updateImageUser: async (request, response) => {
+    try {
+      const { id } = request.params;
+      const checkId = await userModel.getUserById(id);
+
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${id} Not Found`,
+          []
+        );
+      }
+      let image;
+      if (request.file) {
+        const { filename, mimetype } = request.file;
+        image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
+        // PROSES DELETE FILE DI CLOUDINARY
+        await cloudinary.uploader.destroy(image, (result) => result);
+      }
+
+      const setUser = {
+        image,
+      };
+
+      const result = await userModel.updateUser(id, setUser);
+
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Update Data",
         result.data
       );
     } catch (error) {
