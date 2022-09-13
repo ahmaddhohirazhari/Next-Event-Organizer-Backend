@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
+  // eslint-disable-next-line consistent-return
   authentication: async (request, response, next) => {
     try {
       let token = request.headers.authorization;
@@ -29,7 +30,6 @@ module.exports = {
     } catch (error) {
       return error.error;
     }
-    return next();
   },
   isAdmin: async (request, response, next) => {
     try {

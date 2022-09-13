@@ -25,9 +25,9 @@ app.use(bodyParser.json());
 
 app.use("/api", routerNavigation);
 
-app.use("/*", (req, res) => {
-  res.status(404).send("Path Not Found !");
-});
+// app.use("/*", (req, res) => {
+//   res.status(404).send("Path Not Found !");
+// });
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console

@@ -66,7 +66,7 @@ module.exports = {
         return callback(null, true);
       },
       limits: {
-        fileSize: 100,
+        fileSize: 500 * 1024,
       },
     }).single("image");
 
@@ -79,7 +79,6 @@ module.exports = {
         // An unknown error occurred when uploading.
         return wrapper.response(response, 401, err.message, null);
       }
-
       // Everything went fine.
       return next();
     });
@@ -95,7 +94,7 @@ module.exports = {
       // MULTER SETTING
       storage,
       // FILTERING TYPE AND SIZE FILE
-      fileFilter(req, file, callback) {
+      fileFilter(_req, file, callback) {
         const ext = file.mimetype.split("/")[1];
         if (ext !== "png" && ext !== "jpg" && ext !== "gif" && ext !== "jpeg") {
           return callback(new Error("Only images are allowed"));
@@ -103,7 +102,7 @@ module.exports = {
         return callback(null, true);
       },
       limits: {
-        fileSize: 100,
+        fileSize: 500 * 1024,
       },
     }).single("image");
 

@@ -70,4 +70,18 @@ module.exports = {
           }
         });
     }),
+  updateImageUser: (id, data) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("user")
+        .update(data)
+        .eq("userId", id)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
 };
