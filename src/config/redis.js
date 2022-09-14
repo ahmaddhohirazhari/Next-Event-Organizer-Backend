@@ -7,7 +7,7 @@ const redistPort = "11247";
 // REMOTE :
 // 1. install redis-cli global = https://www.npmjs.com/package/redis-cli
 // 2. rdcli -h <host> -a <password> -p <port>
-// 2. rdcli -h redis-11606.c240.us-east-1-3.ec2.cloud.redislabs.com -a ytCJxzIg640RA0qX5tMC8ciLwx08AS92 -p 11606
+// 2. rdcli -h redis-11247.c82.us-east-1-2.ec2.cloud.redislabs.com -a wA6Nd2Pm9gvG5oZ8M7qkbn2vVymD0tnF -p 11247
 
 // const client = redis.createClient();
 const client = redis.createClient({

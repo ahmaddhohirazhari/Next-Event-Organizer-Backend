@@ -41,7 +41,7 @@ module.exports = {
           });
       } else {
         req
-          .ilike("name", `%${searchName}%`)
+          .ilike(sortColumn, `%${searchName}%`)
           .order(sortColumn, { ascending: sortType })
           .then((result) => {
             if (!result.error) {

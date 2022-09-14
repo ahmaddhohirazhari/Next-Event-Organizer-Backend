@@ -23,6 +23,7 @@ module.exports = {
       const offset = page * limit - limit;
 
       // PROSES SET SORTING
+
       let sortColumn = "dateTimeShow";
       let sortType = "asc";
       if (sort) {
@@ -38,8 +39,13 @@ module.exports = {
       }
 
       // PROSES SEARCH SHOWTIME
-      const day = new Date(searchDateShow);
-      const nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
+      if (searchDateShow) {
+        const day = new Date(searchDateShow);
+        const nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
+      }
+
+      console.log(day);
+      console.log(nextDay);
 
       const result = await eventModel.getAllEvent(
         offset,
@@ -50,7 +56,7 @@ module.exports = {
         day,
         nextDay
       );
-
+      console.log(result);
       return wrapper.response(
         response,
         result.status,
