@@ -24,33 +24,29 @@ module.exports = {
     nextDay
   ) =>
     new Promise((resolve, reject) => {
-      const req = supabase
+      let query = supabase
         .from("event")
         .select("*")
         .range(offset, offset + limit - 1);
+
       if (day) {
-        req
+        query = query
           .gt("dateTimeShow", `${day.toISOString()}`)
-          .lt("dateTimeShow", `${nextDay.toISOString()}`)
-          .then((result) => {
-            if (!result.error) {
-              resolve(result);
-            } else {
-              reject(result);
-            }
-          });
-      } else {
-        req
-          .ilike(sortColumn, `%${searchName}%`)
-          .order(sortColumn, { ascending: sortType })
-          .then((result) => {
-            if (!result.error) {
-              resolve(result);
-            } else {
-              reject(result);
-            }
-          });
+          .lt("dateTimeShow", `${nextDay.toISOString()}`);
       }
+
+      if (sortColumn) {
+        query = query
+          .order(sortColumn, { ascending: sortType })
+          .ilike(sortColumn, `%${searchName}%`);
+      }
+      query.then((result) => {
+        if (!result.error) {
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      });
     }),
   getEventById: (eventId) =>
     new Promise((resolve, reject) => {

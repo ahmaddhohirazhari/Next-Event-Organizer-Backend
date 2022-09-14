@@ -6,7 +6,7 @@ module.exports = {
   getAllEvent: async (request, response) => {
     try {
       // eslint-disable-next-line prefer-const
-      let { page, limit, searchName, searchDateShow, sort } = request.query;
+      let { page, limit, searchName, sort, searchDateShow } = request.query;
       page = +page || 1;
       limit = +limit || 3;
 
@@ -39,13 +39,12 @@ module.exports = {
       }
 
       // PROSES SEARCH SHOWTIME
+      let day;
+      let nextDay;
       if (searchDateShow) {
-        const day = new Date(searchDateShow);
-        const nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
+        day = new Date(searchDateShow);
+        nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
       }
-
-      console.log(day);
-      console.log(nextDay);
 
       const result = await eventModel.getAllEvent(
         offset,
@@ -56,7 +55,7 @@ module.exports = {
         day,
         nextDay
       );
-      console.log(result);
+
       return wrapper.response(
         response,
         result.status,
