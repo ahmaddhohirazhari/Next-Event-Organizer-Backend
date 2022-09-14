@@ -14,14 +14,20 @@ module.exports = {
           }
         });
     }),
-  getAllEvent: (offset, limit, name, newSort, day, nextDay) =>
+  getAllEvent: (
+    offset,
+    limit,
+    searchName,
+    sortColumn,
+    sortType,
+    day,
+    nextDay
+  ) =>
     new Promise((resolve, reject) => {
       const req = supabase
         .from("event")
         .select("*")
-        .range(offset, offset + limit - 1)
-        .ilike("name", `%${name}%`)
-        .order("createAt", { ascending: newSort });
+        .range(offset, offset + limit - 1);
       if (day) {
         req
           .gt("dateTimeShow", `${day.toISOString()}`)
@@ -34,13 +40,16 @@ module.exports = {
             }
           });
       } else {
-        req.then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
+        req
+          .ilike("name", `%${searchName}%`)
+          .order(sortColumn, { ascending: sortType })
+          .then((result) => {
+            if (!result.error) {
+              resolve(result);
+            } else {
+              reject(result);
+            }
+          });
       }
     }),
   getEventById: (eventId) =>

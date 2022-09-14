@@ -26,7 +26,9 @@ module.exports = {
       let sortColumn = "dateTimeShow";
       let sortType = "asc";
       if (sort) {
+        // eslint-disable-next-line prefer-destructuring
         sortColumn = sort.split(" ")[0];
+        // eslint-disable-next-line prefer-destructuring
         sortType = sort.split(" ")[1];
       }
       if (sortType.toLowerCase() === "asc") {
@@ -35,10 +37,6 @@ module.exports = {
         sortType = false;
       }
 
-      if (sortColumn) {
-      } else {
-        return sortColumn;
-      }
       // PROSES SEARCH SHOWTIME
       const day = new Date(searchDateShow);
       const nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
@@ -47,7 +45,8 @@ module.exports = {
         offset,
         limit,
         searchName,
-        newSort,
+        sortColumn,
+        sortType,
         day,
         nextDay
       );
