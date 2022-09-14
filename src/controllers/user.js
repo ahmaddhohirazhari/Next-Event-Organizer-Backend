@@ -99,8 +99,15 @@ module.exports = {
     try {
       const { userId } = request.decodeToken;
 
-      const { name, username, gender, profession, nationality, dateOfBirth } =
-        request.body;
+      const {
+        name,
+        username,
+        gender,
+        profession,
+        nationality,
+        dateOfBirth,
+        role,
+      } = request.body;
       const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
         return wrapper.response(
@@ -125,6 +132,7 @@ module.exports = {
         profession,
         nationality,
         dateOfBirth,
+        role,
         image,
       };
 

@@ -31,6 +31,7 @@ module.exports = {
       return error.error;
     }
   },
+  // eslint-disable-next-line consistent-return
   isAdmin: async (request, response, next) => {
     try {
       // PROSES UNTUK PENGECEKAN ROLE
@@ -39,26 +40,9 @@ module.exports = {
       token = token.split(" ")[1];
 
       jwt.verify(token, "RAHASIA", (error, result) => {
+        console.log(result);
         if (result.role === "user") {
-          return wrapper.response(response, 403, error.message, null);
-        }
-
-        return next();
-      });
-      return next();
-      // console.log(request.decodeToken);
-    } catch (error) {
-      return error.error;
-    }
-  },
-  isUser: async (request, response, next) => {
-    try {
-      // PROSES UNTUK PENGECEKAN ROLE
-      let token = request.headers.authorization;
-      token = token.split(" ")[1];
-      jwt.verify(token, "RAHASIA", (error, result) => {
-        if (result.role === "Admin") {
-          return wrapper.response(response, 403, error.message, null);
+          return wrapper.response(response, 403, "You Not Admin", null);
         }
         return next();
       });
@@ -67,6 +51,5 @@ module.exports = {
     } catch (error) {
       return error.error;
     }
-    return next();
   },
 };
