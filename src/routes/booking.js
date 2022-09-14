@@ -6,5 +6,6 @@ const bookingController = require("../controllers/booking");
 Router.post("/:userId", bookingController.createBooking);
 Router.get("/:userId", bookingController.getAllBooking);
 Router.get("/list/:userId", bookingController.getBookingByUserId);
+Router.get("/bookingSection/:eventId", bookingController.getBookingSection);
 
 module.exports = Router;

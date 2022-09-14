@@ -175,6 +175,9 @@ module.exports = {
           (result) => result
         );
       }
+      if (!request.file) {
+        return wrapper.response(response, 404, "Image Must Be Filled");
+      }
 
       const setData = {
         name,

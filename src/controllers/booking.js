@@ -112,4 +112,28 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
+  getBookingSection: async (request, response) => {
+    try {
+      const { eventId } = request.params;
+      console.log("test1");
+      const result = await bookingModel.getBookingSection(eventId);
+      console.log("test");
+      console.log(result);
+      if (result.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `User By user Id ${eventId} Not Found`,
+          []
+        );
+      }
+
+      return wrapper.response(
+        response,
+        result.status,
+        "Success Get Booking By UserId",
+        result.data
+      );
+    } catch (error) {}
+  },
 };

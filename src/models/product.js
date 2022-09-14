@@ -15,24 +15,36 @@ module.exports = {
           }
         });
     }),
-  getAllProduct: (offset, limit) =>
+  getAllProduct: (offset, limit, sortColumn, sortType, day, nextDay) =>
     new Promise((resolve, reject) => {
       // page = 1
       // limit = 10
       // offset = 0
       // .range(0, 9) // offset(0) + limit(10) - 1 = 9
-      supabase
+      const query = supabase
         .from("product")
         .select("*")
         .range(offset, offset + limit - 1)
-        // input query tambahan untuk sort dan search
-        .then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
+        .order(sortColumn, { ascending: sortType });
+      // .ilike("name", `%...%`)
+      // kondisi untuk search by date
+      // if (day) {
+      //   query = query
+      //     .gt("createdAt", `${day.toISOString()}`)
+      //     .lt("createdAt", `${nextDay.toISOString()}`);
+      // }
+      // if (day) {
+      // query...
+      // }
+      // input query tambahan untuk sort dan search
+
+      query.then((result) => {
+        if (!result.error) {
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      });
     }),
   // new Promise(async (resolve, reject) => {
   //   const result = await supabase.from("product").select("*");
