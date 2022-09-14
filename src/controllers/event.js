@@ -170,7 +170,10 @@ module.exports = {
         image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
 
         // PROSES DELETE FILE DI CLOUDINARY
-        await cloudinary.uploader.destroy(image, (result) => result);
+        await cloudinary.uploader.destroy(
+          checkId.data[0].image.split(".")[0],
+          (result) => result
+        );
       }
 
       const setData = {
@@ -181,6 +184,7 @@ module.exports = {
         dateTimeShow,
         price,
         image,
+        updatedAt: "now()",
       };
 
       const result = await eventModel.updateEvent(id, setData);

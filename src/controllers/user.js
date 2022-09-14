@@ -176,12 +176,16 @@ module.exports = {
           []
         );
       }
+
       let image;
       if (request.file) {
         const { filename, mimetype } = request.file;
         image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
         // PROSES DELETE FILE DI CLOUDINARY
-        cloudinary.uploader.destroy(image, (result) => result);
+        cloudinary.uploader.destroy(
+          checkId.data[0].image.split(".")[0],
+          (result) => result
+        );
       }
 
       const setData = {
@@ -243,7 +247,7 @@ module.exports = {
         return wrapper.response(response, 400, "Password Not Match", null);
       }
 
-      const encryptedNewPassword = encryptPassword(oldPassword, {
+      const encryptedNewPassword = encryptPassword(newPassword, {
         min: 6,
         max: 24,
         pattern: /^\w{6,24}$/,
@@ -251,6 +255,7 @@ module.exports = {
       });
       const setData = {
         password: encryptedNewPassword,
+        updatedAt: "now()",
       };
 
       const result = await userModel.updateUser(userId, setData);
