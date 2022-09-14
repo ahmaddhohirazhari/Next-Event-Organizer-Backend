@@ -16,21 +16,32 @@ module.exports = {
     }),
   getAllEvent: (offset, limit, name, newSort, day, nextDay) =>
     new Promise((resolve, reject) => {
-      supabase
+      const req = supabase
         .from("event")
         .select("*")
         .range(offset, offset + limit - 1)
         .ilike("name", `%${name}%`)
-        .order("createAt", { ascending: newSort })
-        .gt("dateTimeShow", `${day.toISOString()}`)
-        .lt("dateTimeShow", `${nextDay.toISOString()}`)
-        .then((result) => {
+        .order("createAt", { ascending: newSort });
+      if (day) {
+        req
+          .gt("dateTimeShow", `${day.toISOString()}`)
+          .lt("dateTimeShow", `${nextDay.toISOString()}`)
+          .then((result) => {
+            if (!result.error) {
+              resolve(result);
+            } else {
+              reject(result);
+            }
+          });
+      } else {
+        req.then((result) => {
           if (!result.error) {
             resolve(result);
           } else {
             reject(result);
           }
         });
+      }
     }),
   getEventById: (eventId) =>
     new Promise((resolve, reject) => {

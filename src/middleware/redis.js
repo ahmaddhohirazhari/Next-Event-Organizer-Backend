@@ -2,7 +2,7 @@ const client = require("../config/redis");
 const wrapper = require("../utils/wrapper");
 
 module.exports = {
-  getProductById: async (request, response, next) => {
+  getEventById: async (request, response, next) => {
     try {
       const { id } = request.params;
       let result = await client.get(`getProduct:${id}`);
@@ -22,7 +22,7 @@ module.exports = {
       return wrapper.response(response, 400, error.message, null);
     }
   },
-  getAllProduct: async (request, response, next) => {
+  getAllEvent: async (request, response, next) => {
     try {
       let result = await client.get(
         `getProduct:${JSON.stringify(request.query)}`
@@ -44,7 +44,7 @@ module.exports = {
       return wrapper.response(response, 400, error.message, null);
     }
   },
-  clearProduct: async (request, response, next) => {
+  clearEvent: async (request, response, next) => {
     try {
       const keys = await client.keys("getProduct:*");
       if (keys.length > 0) {
