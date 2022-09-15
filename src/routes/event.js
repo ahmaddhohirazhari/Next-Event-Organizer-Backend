@@ -34,13 +34,15 @@ Router.post(
 );
 Router.delete(
   "/:id",
-  // deleteMiddleware.deleteEvent,
+  authMiddleware.authentication,
+  authMiddleware.isAdmin,
+  uploadMiddleware.uploadEvent,
   eventController.deleteEvent
 );
 Router.patch(
   "/:id",
   authMiddleware.authentication,
-  // authMiddleware.isAdmin,
+  authMiddleware.isAdmin,
   uploadMiddleware.uploadEvent,
   eventController.updateEvent
 );

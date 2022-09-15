@@ -45,7 +45,8 @@ module.exports = {
         day = new Date(searchDateShow);
         nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
       }
-
+      console.log(day);
+      console.log(nextDay);
       const result = await eventModel.getAllEvent(
         offset,
         limit,
@@ -140,6 +141,14 @@ module.exports = {
       const result = await eventModel.deleteEvent(id);
       const { image } = result.data[0];
       const fileName = image.split(".")[0];
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${id} Not Found`,
+          []
+        );
+      }
 
       // PROSES DELETE FILE DI CLOUDINARY
       await cloudinary.uploader.destroy(fileName, (res) => res);

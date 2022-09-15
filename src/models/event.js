@@ -27,20 +27,24 @@ module.exports = {
       let query = supabase
         .from("event")
         .select("*")
-        .range(offset, offset + limit - 1);
+        .range(offset, offset + limit - 1)
+        .order(sortColumn, { ascending: sortType })
+        .ilike("name", `%${searchName}%`);
 
       if (day) {
         query = query
           .gt("dateTimeShow", `${day.toISOString()}`)
-          .lt("dateTimeShow", `${nextDay.toISOString()}`);
+          .lt("dateTimeShow", `${nextDay.toISOString()}`)
+          .then((result) => {
+            if (!result.error) {
+              resolve(result);
+            } else {
+              reject(result);
+            }
+          });
       }
 
-      if (sortColumn) {
-        query = query
-          .order(sortColumn, { ascending: sortType })
-          .ilike(sortColumn, `%${searchName}%`);
-      }
-      query.then((result) => {
+      querey = query.then((result) => {
         if (!result.error) {
           resolve(result);
         } else {

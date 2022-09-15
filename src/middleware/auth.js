@@ -40,6 +40,7 @@ module.exports = {
       token = token.split(" ")[1];
 
       jwt.verify(token, "RAHASIA", (error, result) => {
+        console.log(object);
         if (result.role === "user") {
           return wrapper.response(response, 403, "You Not Admin", null);
         }
