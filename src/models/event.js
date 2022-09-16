@@ -28,10 +28,10 @@ module.exports = {
         .from("event")
         .select("*")
         .range(offset, offset + limit - 1)
-        .order(sortColumn, { ascending: sortType })
-        .ilike("name", `%${searchName}%`);
-
+        .ilike("name", `%${searchName}%`)
+        .order(sortColumn, { ascending: sortType });
       if (day) {
+        console.log("test");
         query = query
           .gt("dateTimeShow", `${day.toISOString()}`)
           .lt("dateTimeShow", `${nextDay.toISOString()}`)
@@ -42,15 +42,15 @@ module.exports = {
               reject(result);
             }
           });
+      } else {
+        query.then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
       }
-
-      querey = query.then((result) => {
-        if (!result.error) {
-          resolve(result);
-        } else {
-          reject(result);
-        }
-      });
     }),
   getEventById: (eventId) =>
     new Promise((resolve, reject) => {

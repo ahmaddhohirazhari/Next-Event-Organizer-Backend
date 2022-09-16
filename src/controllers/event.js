@@ -45,8 +45,10 @@ module.exports = {
         day = new Date(searchDateShow);
         nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
       }
-      console.log(day);
-      console.log(nextDay);
+      // console.log(newDay);
+      // console.log(nextDay);
+      // console.log(day.toISOString());
+
       const result = await eventModel.getAllEvent(
         offset,
         limit,
@@ -56,7 +58,7 @@ module.exports = {
         day,
         nextDay
       );
-
+      // console.log(result);
       return wrapper.response(
         response,
         result.status,
@@ -138,9 +140,8 @@ module.exports = {
   deleteEvent: async (request, response) => {
     try {
       const { id } = request.params;
-      const result = await eventModel.deleteEvent(id);
-      const { image } = result.data[0];
-      const fileName = image.split(".")[0];
+      const checkId = await eventModel.getEventById(id);
+
       if (checkId.data.length < 1) {
         return wrapper.response(
           response,
@@ -149,6 +150,9 @@ module.exports = {
           []
         );
       }
+      const result = await eventModel.deleteEvent(id);
+      const { image } = result.data[0];
+      const fileName = image.split(".")[0];
 
       // PROSES DELETE FILE DI CLOUDINARY
       await cloudinary.uploader.destroy(fileName, (res) => res);
