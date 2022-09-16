@@ -1,4 +1,4 @@
-const encryptPassword = require("encrypt-password");
+const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 const cloudinary = require("../config/cloudinary");
@@ -156,6 +156,15 @@ module.exports = {
   deleteUser: async (request, response) => {
     try {
       const { id } = request.params;
+      const checkId = await userModel.getUserById(id);
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${id} Not Found`,
+          []
+        );
+      }
       const result = await userModel.deleteUser(id);
       return wrapper.response(
         response,
@@ -242,14 +251,10 @@ module.exports = {
       }
 
       // VALIDASI OLDPASSWORD
-      const encryptedPassword = encryptPassword(oldPassword, {
-        min: 6,
-        max: 24,
-        pattern: /^\w{6,24}$/,
-        signature: "signature",
-      });
-
-      if (encryptedPassword !== checkId.data[0].password) {
+      const isValid = await bcrypt
+        .compare(oldPassword, checkId.data[0].password)
+        .then((result) => result);
+      if (!isValid) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
 
@@ -258,14 +263,10 @@ module.exports = {
         return wrapper.response(response, 400, "Password Not Match", null);
       }
 
-      const encryptedNewPassword = encryptPassword(newPassword, {
-        min: 6,
-        max: 24,
-        pattern: /^\w{6,24}$/,
-        signature: "signature",
-      });
+      // HASH PASSWORD
+      const hash = bcrypt.hashSync(newPassword, 10);
       const setData = {
-        password: encryptedNewPassword,
+        password: hash,
         updatedAt: "now()",
       };
 

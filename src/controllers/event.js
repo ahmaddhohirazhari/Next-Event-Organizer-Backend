@@ -23,7 +23,6 @@ module.exports = {
       const offset = page * limit - limit;
 
       // PROSES SET SORTING
-
       let sortColumn = "dateTimeShow";
       let sortType = "asc";
       if (sort) {
@@ -45,10 +44,6 @@ module.exports = {
         day = new Date(searchDateShow);
         nextDay = new Date(new Date(day).setDate(day.getDate() + 1));
       }
-      // console.log(newDay);
-      // console.log(nextDay);
-      // console.log(day.toISOString());
-
       const result = await eventModel.getAllEvent(
         offset,
         limit,
@@ -230,7 +225,3 @@ module.exports = {
     }
   },
 };
-
-// request.query = bisa digunakan untuk fitur paginasi, sort,search di method get
-// request.params = bisa digunakan untuk fitur getdatabyid, updatedata, deletedata
-// request.body = bsa digunakan untuk fitur create/update
