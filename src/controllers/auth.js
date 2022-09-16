@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const encryptPassword = require("encrypt-password");
+const bcrypt = require("bcrypt");
 const authModel = require("../models/auth");
 const wrapper = require("../utils/wrapper");
 
@@ -19,17 +19,12 @@ module.exports = {
       }
 
       // PROSES ENCRYPT PASSWORD
-      const encryptedPassword = encryptPassword(password, {
-        min: 6,
-        max: 24,
-        pattern: /^\w{6,24}$/,
-        signature: "signature",
-      });
+      const hash = bcrypt.hashSync(password, 10);
 
       const setData = {
         username,
         email,
-        password: encryptedPassword, // UNTUK PASSWORD BISA DI ENKRIPSI
+        password: hash,
       };
 
       // PROSES PENGECEKAN APAKAH EMAIL YANG MAU DI DAFTARKAN SUDAH ADA ATAU BELUM ?
@@ -60,12 +55,6 @@ module.exports = {
   login: async (request, response) => {
     try {
       const { email, password } = request.body;
-      const encryptedPassword = encryptPassword(password, {
-        min: 6,
-        max: 24,
-        pattern: /^\w{6,24}$/,
-        signature: "signature",
-      });
 
       // 1. PROSES PENGECEKAN EMAIL
       const checkEmail = await authModel.getUserByEmail(email);
@@ -74,7 +63,10 @@ module.exports = {
       }
 
       // 2. PROSES PENCOCOKAN PASSWORD
-      if (encryptedPassword !== checkEmail.data[0].password) {
+      const isValid = await bcrypt
+        .compare(password, checkEmail.data[0].password)
+        .then((result) => result);
+      if (!isValid) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
 
