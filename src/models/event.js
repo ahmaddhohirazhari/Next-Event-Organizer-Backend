@@ -31,7 +31,6 @@ module.exports = {
         .ilike("name", `%${searchName}%`)
         .order(sortColumn, { ascending: sortType });
       if (day) {
-        console.log("test");
         query = query
           .gt("dateTimeShow", `${day.toISOString()}`)
           .lt("dateTimeShow", `${nextDay.toISOString()}`)
