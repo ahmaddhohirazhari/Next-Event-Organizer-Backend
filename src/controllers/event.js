@@ -1,6 +1,7 @@
 const eventModel = require("../models/event");
 const wrapper = require("../utils/wrapper");
 const cloudinary = require("../config/cloudinary");
+const client = require("../config/redis");
 
 module.exports = {
   getAllEvent: async (request, response) => {
@@ -53,7 +54,12 @@ module.exports = {
         day,
         nextDay
       );
-      // console.log(result);
+      client.setEx(
+        `getEvent:${JSON.stringify(request.query)}`,
+        3600,
+        JSON.stringify({ result: result.data, pagination })
+      );
+
       return wrapper.response(
         response,
         result.status,
@@ -84,6 +90,8 @@ module.exports = {
           []
         );
       }
+
+      client.setEx(`getEvent:${id}`, 3600, JSON.stringify(result.data));
 
       return wrapper.response(
         response,

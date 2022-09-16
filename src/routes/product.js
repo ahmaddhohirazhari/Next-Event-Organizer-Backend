@@ -22,7 +22,7 @@ Router.get("/greetings", productController.showGreetings);
 Router.get(
   "/",
   authMiddleware.authentication,
-  authMiddleware.isAdmin,
+  // authMiddleware.isAdmin,
   productController.getAllProduct
 );
 Router.get("/:id", productController.getProductById);

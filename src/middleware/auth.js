@@ -1,6 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const jwt = require("jsonwebtoken");
 const wrapper = require("../utils/wrapper");
+const client = require("../config/redis");
 
 module.exports = {
   authentication: async (request, response, next) => {
@@ -12,7 +13,15 @@ module.exports = {
       }
 
       token = token.split(" ")[1];
-
+      const checkTokenBlackList = await client.get(`accessToken:${token}`);
+      if (checkTokenBlackList) {
+        return wrapper.response(
+          response,
+          401,
+          "Your token is destroyed please login again !",
+          null
+        );
+      }
       jwt.verify(token, "RAHASIA", (error, result) => {
         if (error) {
           return wrapper.response(response, 403, error.message, null);

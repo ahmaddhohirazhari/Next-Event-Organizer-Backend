@@ -1,6 +1,6 @@
 const productModel = require("../models/product");
 const wrapper = require("../utils/wrapper");
-// const client = require("../config/redis");
+const client = require("../config/redis");
 const cloudinary = require("../config/cloudinary");
 
 module.exports = {
