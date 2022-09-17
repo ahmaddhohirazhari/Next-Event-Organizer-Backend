@@ -1,9 +1,9 @@
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-  cloud_name: "dhohircloud",
-  api_key: "259886355277397",
-  api_secret: "KCnW5OfaEX8_3oNu3k6YVW7cpDg",
+  cloud_name: process.env.CLOUDINARY_DATABSE_NAME,
+  api_key: process.env.CLOUDINARY_DATABSE_API_KEY,
+  api_secret: process.env.CLOUDINARY_DATABSE_API_SECRET,
   secure: true,
 });
 
