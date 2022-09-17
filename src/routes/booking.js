@@ -9,8 +9,16 @@ Router.post(
   authMiddleware.authentication,
   bookingController.createBooking
 );
-Router.get("/:userId", bookingController.getAllBooking);
-Router.get("/list/:userId", bookingController.getBookingByUserId);
+Router.get(
+  "/:userId",
+  authMiddleware.authentication,
+  bookingController.getAllBooking
+);
+Router.get(
+  "/list/:userId",
+  authMiddleware.authentication,
+  bookingController.getBookingByUserId
+);
 Router.get(
   "/bookingSection/:eventId",
   authMiddleware.authentication,
