@@ -110,8 +110,12 @@ module.exports = {
   logout: async (request, response) => {
     try {
       let token = request.headers.authorization;
+      const { refreshtoken } = request.headers;
       token = token.split(" ")[1];
+
       client.setEx(`accessToken:${token}`, 3600 * 48, token);
+      client.setEx(`refreshoken:${refreshtoken}`, 3600 * 48, refreshtoken);
+
       return wrapper.response(response, 200, "Success Logout", null);
     } catch (error) {
       const {
@@ -124,8 +128,8 @@ module.exports = {
   },
   refresh: async (request, response) => {
     try {
-      const { refreshToken } = request.body;
-      if (!refreshToken) {
+      const { refreshtoken } = request.headers;
+      if (!refreshtoken) {
         return wrapper.response(
           response,
           400,
@@ -134,11 +138,24 @@ module.exports = {
         );
       }
 
+      const checkTokenBlacklist = await client.get(
+        `refreshtoken:${refreshtoken}`
+      );
+
+      if (checkTokenBlacklist) {
+        return wrapper.response(
+          response,
+          403,
+          "Your Token is Destroyed Pleease Login Again",
+          null
+        );
+      }
+
       let payload;
       let token;
-      let newRefreshToken;
+      let newRefreshtoken;
 
-      jwt.verify(refreshToken, process.env.REFRESH_KEYS, (error, result) => {
+      jwt.verify(refreshtoken, process.env.REFRESH_KEYS, (error, result) => {
         if (error) {
           return wrapper.response(response, 401, error.message, null);
         }
@@ -151,15 +168,16 @@ module.exports = {
           expiresIn: "24h",
         });
 
-        newRefreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
+        newRefreshtoken = jwt.sign(payload, process.env.REFRESH_KEYS, {
           expiresIn: "36h",
         });
+        client.setEx(`refreshtoken:${refreshtoken}`, 3600 * 36, refreshtoken);
         return result;
       });
       const result = {
         userId: payload.userId,
         token,
-        refreshToken: newRefreshToken,
+        refreshtoken: newRefreshtoken,
       };
 
       return wrapper.response(response, 200, "Succes Refresh Token", result);
