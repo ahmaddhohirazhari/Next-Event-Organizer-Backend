@@ -83,13 +83,21 @@ module.exports = {
         role: !checkEmail.data[0].role ? "user" : checkEmail.data[0].role,
       };
 
-      const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" });
+      const token = jwt.sign(payload, process.env.ACCESS_KEYS, {
+        expiresIn: "24h",
+      });
+
+      const refreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
+        expiresIn: "36h",
+      });
 
       // 4. PROSES RESPON KE USER
-      return wrapper.response(response, 200, "Success Login", {
+      const newResult = {
         userId: payload.userId,
         token,
-      });
+        refreshToken,
+      };
+      return wrapper.response(response, 200, "Success Login", newResult);
     } catch (error) {
       const {
         status = 500,
@@ -105,6 +113,56 @@ module.exports = {
       token = token.split(" ")[1];
       client.setEx(`accessToken:${token}`, 3600 * 48, token);
       return wrapper.response(response, 200, "Success Logout", null);
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  refresh: async (request, response) => {
+    try {
+      const { refreshToken } = request.body;
+      if (!refreshToken) {
+        return wrapper.response(
+          response,
+          400,
+          "Request Token Must Be Filled",
+          null
+        );
+      }
+
+      let payload;
+      let token;
+      let newRefreshToken;
+
+      jwt.verify(refreshToken, process.env.REFRESH_KEYS, (error, result) => {
+        if (error) {
+          return wrapper.response(response, 401, error.message, null);
+        }
+        payload = {
+          userId: result.userId,
+          role: result.role,
+        };
+
+        token = jwt.sign(payload, process.env.ACCESS_KEYS, {
+          expiresIn: "24h",
+        });
+
+        newRefreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
+          expiresIn: "36h",
+        });
+        return result;
+      });
+      const result = {
+        userId: payload.userId,
+        token,
+        refreshToken: newRefreshToken,
+      };
+
+      return wrapper.response(response, 200, "Succes Refresh Token", result);
     } catch (error) {
       const {
         status = 500,

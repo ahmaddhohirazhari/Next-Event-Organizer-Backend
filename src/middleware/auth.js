@@ -22,7 +22,7 @@ module.exports = {
           null
         );
       }
-      jwt.verify(token, "RAHASIA", (error, result) => {
+      jwt.verify(token, process.env.ACCESS_KEYS, (error, result) => {
         if (error) {
           return wrapper.response(response, 403, error.message, null);
         }
