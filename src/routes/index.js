@@ -9,10 +9,6 @@ const wishlistRoutes = require("./wishlist");
 const bookingRoutes = require("./booking");
 const authRouters = require("./auth");
 
-// Router.get("/greetings", (request, response) => {
-//   response.status(200).send("Hello World!");
-// });
-
 Router.use("/product", productRoutes);
 Router.use("/event", eventRoutes);
 Router.use("/user", userRoutes);
