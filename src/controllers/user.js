@@ -108,6 +108,7 @@ module.exports = {
         profession,
         nationality,
         dateOfBirth,
+        phoneNumber,
         role,
       } = request.body;
       const checkId = await userModel.getUserById(userId);
@@ -134,6 +135,7 @@ module.exports = {
         profession,
         nationality,
         dateOfBirth,
+        phoneNumber,
         role,
         image,
       };
