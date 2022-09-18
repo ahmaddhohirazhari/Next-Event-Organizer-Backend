@@ -1,6 +1,7 @@
 const bookingModel = require("../models/booking");
 const wrapper = require("../utils/wrapper");
 const groupingSection = require("../utils/groupingSection");
+const client = require("../config/redis");
 
 module.exports = {
   createBooking: async (request, response) => {
@@ -68,6 +69,13 @@ module.exports = {
       const offset = page * limit - limit;
 
       const result = await bookingModel.getAllBooking(offset, limit, userId);
+
+      client.setEx(
+        `getBooking:${JSON.stringify(request.query)}`,
+        3600,
+        JSON.stringify({ result: result.data, pagination })
+      );
+
       return wrapper.response(
         response,
         result.status,
@@ -97,7 +105,7 @@ module.exports = {
           []
         );
       }
-
+      client.setEx(`getBooking:${userId}`, 3600, JSON.stringify(result.data));
       return wrapper.response(
         response,
         result.status,
@@ -125,7 +133,7 @@ module.exports = {
           []
         );
       }
-
+      client.setEx(`getBooking:${eventId}`, 3600, JSON.stringify(result.data));
       const resultSection = groupingSection(result);
 
       return wrapper.response(

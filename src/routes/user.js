@@ -6,7 +6,6 @@ const userController = require("../controllers/user");
 
 const authMiddleware = require("../middleware/auth");
 
-// eslint-disable-next-line import/no-unresolved
 const uploadMiddleware = require("../middleware/uploadFile");
 
 // GET ALL DATA
