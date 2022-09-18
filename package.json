@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx nodemon index.js",
+    "test": "npx nodemon index.js",
     "generateKeys": "node src/utils/generateKeys"
   },
   "author": "",
