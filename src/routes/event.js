@@ -4,7 +4,7 @@ const Router = express.Router();
 const eventController = require("../controllers/event");
 
 const authMiddleware = require("../middleware/auth");
-// eslint-disable-next-line import/no-unresolved
+
 const uploadMiddleware = require("../middleware/uploadFile");
 const redisMiddleware = require("../middleware/redis");
 

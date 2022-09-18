@@ -23,7 +23,7 @@ Router.delete("/:id", userController.deleteUser);
 
 // UPDATE DATA USER
 Router.patch(
-  "/",
+  "/updateUser",
   authMiddleware.authentication,
   uploadMiddleware.uploadUser,
   userController.updateUser
