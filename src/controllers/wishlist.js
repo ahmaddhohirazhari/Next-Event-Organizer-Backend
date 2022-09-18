@@ -1,5 +1,6 @@
 const wishlistModel = require("../models/wishlist");
 const wrapper = require("../utils/wrapper");
+const client = require("../config/redis");
 
 module.exports = {
   createWishlist: async (request, response) => {
@@ -45,6 +46,11 @@ module.exports = {
       const offset = page * limit - limit;
 
       const result = await wishlistModel.getAllWishlist(offset, limit, userId);
+      client.setEx(
+        `getWishlist:${JSON.stringify(request.query)}`,
+        3600,
+        JSON.stringify({ result: result.data, pagination })
+      );
       return wrapper.response(
         response,
         result.status,
@@ -75,6 +81,8 @@ module.exports = {
           []
         );
       }
+
+      client.setEx(`getWishlist:${id}`, 3600, JSON.stringify(result.data));
 
       return wrapper.response(
         response,
