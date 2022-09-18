@@ -6,7 +6,7 @@ const helmet = require("helmet");
 const xss = require("xss-clean");
 const compression = require("compression");
 const bodyParser = require("body-parser");
-const routerNavigation = require("./src/routes"); // ./routes/index.js
+const routerNavigation = require("./src/routes/index"); // ./routes/index.js
 
 const app = express();
 const port = process.env.PORT;
