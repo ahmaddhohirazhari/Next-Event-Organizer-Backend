@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 const routerNavigation = require("./src/routes"); //
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -18,10 +18,6 @@ app.use(xss());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-// app.get("/greetings", (request, response) => {
-//   response.status(200).send("Hello World!");
-// });
 
 app.use("/api", routerNavigation);
 
