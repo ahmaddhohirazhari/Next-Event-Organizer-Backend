@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const authModel = require("../models/auth");
 const wrapper = require("../utils/wrapper");
 const client = require("../config/redis");
