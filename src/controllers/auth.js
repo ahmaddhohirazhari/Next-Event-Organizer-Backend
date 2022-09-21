@@ -47,6 +47,7 @@ module.exports = {
         lowerCaseAlphabets: false,
       });
       client.setEx(`OTP:${OTP}`, 120, OTP);
+      client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
       // SEND EMAIL ACTIVATION
       const setMailOptions = {
         to: email,
@@ -76,12 +77,14 @@ module.exports = {
   },
   verify: async (request, response) => {
     try {
-      const { OTP } = request.body;
+      const { OTP } = request.params;
       const cehckOTP = await client.get(`OTP:${OTP}`);
       if (!cehckOTP) {
         return wrapper.response(response, 400, "Wrong Input OTP", null);
       }
-      return wrapper.response(response, 200, "Verify Success ", null);
+      const userId = await client.get(`userId:${OTP}`);
+      const result = [{ userId }];
+      return wrapper.response(response, 200, "Verify Success ", result);
     } catch (error) {
       const {
         status = 500,
@@ -133,6 +136,7 @@ module.exports = {
         userId: payload.userId,
         token,
         refreshToken,
+        status: "active",
       };
       return wrapper.response(response, 200, "Success Login", newResult);
     } catch (error) {
