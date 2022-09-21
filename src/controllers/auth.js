@@ -78,7 +78,7 @@ module.exports = {
   verify: async (request, response) => {
     try {
       const { OTP } = request.params;
-      console.log(reques.params);
+
       const cehckOTP = await client.get(`OTP:${OTP}`);
       if (!cehckOTP) {
         return wrapper.response(response, 400, "Wrong Input OTP", null);
