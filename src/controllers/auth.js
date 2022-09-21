@@ -46,7 +46,7 @@ module.exports = {
         specialChars: false,
         lowerCaseAlphabets: false,
       });
-      client.setEx(`OTP:${OTP}`, 120, OTP);
+      client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
       // SEND EMAIL ACTIVATION
       const setMailOptions = {
@@ -54,7 +54,7 @@ module.exports = {
         name: username,
         subject: "Email Verification !",
         template: "verificationEmail.html",
-        buttonUrl: `http://localhost:3001/api/auth/verify/`,
+        buttonUrl: `http://localhost:3001/api/auth/verify/${OTP}`,
         OTP,
       };
 
@@ -78,12 +78,14 @@ module.exports = {
   verify: async (request, response) => {
     try {
       const { OTP } = request.params;
+      console.log(reques.params);
       const cehckOTP = await client.get(`OTP:${OTP}`);
       if (!cehckOTP) {
         return wrapper.response(response, 400, "Wrong Input OTP", null);
       }
       const userId = await client.get(`userId:${OTP}`);
       const result = [{ userId }];
+      client.set(`userId: ${result[0].userId}`);
       return wrapper.response(response, 200, "Verify Success ", result);
     } catch (error) {
       const {
@@ -112,6 +114,19 @@ module.exports = {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
 
+      // CEK STATUS ACOUNT
+      const cehckStatus = await client.get(
+        `userId:${checkEmail.data[0].password}`
+      );
+      if (!cehckStatus) {
+        return wrapper.response(
+          response,
+          400,
+          "Please Activate Your Account",
+          null
+        );
+      }
+
       // 3. PROSES PEMBUATAN TOKEN JWT
       // PAYLOAD = DATA YANG MAU DISIMPAN/DIJADIKAN TOKEN
       // KEY = KATA KUNCI BISA DI GENERATE ATAU DIBUAT LANGSUNG
@@ -132,11 +147,14 @@ module.exports = {
       });
 
       // 4. PROSES RESPON KE USER
+      const setStatus = {
+        status: "active",
+      };
+      const result = await authModel.register(setStatus);
       const newResult = {
-        userId: payload.userId,
+        userId: result.data[0].status,
         token,
         refreshToken,
-        status: "active",
       };
       return wrapper.response(response, 200, "Success Login", newResult);
     } catch (error) {
