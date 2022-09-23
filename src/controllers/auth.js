@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
 const authModel = require("../models/auth");
+const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 const client = require("../config/redis");
 const { sendMail } = require("../utils/mail");
@@ -77,7 +78,6 @@ module.exports = {
   },
   verify: async (request, response) => {
     try {
-      //add
       const { OTP } = request.params;
 
       const cehckOTP = await client.get(`OTP:${OTP}`);
@@ -85,8 +85,14 @@ module.exports = {
         return wrapper.response(response, 400, "Wrong Input OTP", null);
       }
       const userId = await client.get(`userId:${OTP}`);
+
       const result = [{ userId }];
-      client.set(`userId: ${result[0].userId}`);
+      client.set(`userId: ${userId}`, userId);
+      const setStatus = {
+        status: "active",
+      };
+      await userModel.updateUser(userId, setStatus);
+
       return wrapper.response(response, 200, "Verify Success ", result);
     } catch (error) {
       const {
@@ -114,11 +120,10 @@ module.exports = {
       if (!isValid) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
-
+      const { userId } = checkEmail.data[0];
       // CEK STATUS ACOUNT
-      const cehckStatus = await client.get(
-        `userId:${checkEmail.data[0].password}`
-      );
+      const cehckStatus = client.get(`userId:${userId}`);
+
       if (!cehckStatus) {
         return wrapper.response(
           response,
@@ -148,12 +153,9 @@ module.exports = {
       });
 
       // 4. PROSES RESPON KE USER
-      const setStatus = {
-        status: "active",
-      };
-      const result = await authModel.register(setStatus);
+
       const newResult = {
-        userId: result.data[0].status,
+        userId: checkEmail.data[0].userId,
         token,
         refreshToken,
       };

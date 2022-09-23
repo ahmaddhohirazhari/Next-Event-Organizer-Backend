@@ -127,7 +127,7 @@ module.exports = {
         // PROSES DELETE FILE DI CLOUDINARY
         cloudinary.uploader.destroy(image, (result) => result);
       }
-
+      let status;
       const setData = {
         name,
         username,
@@ -138,6 +138,7 @@ module.exports = {
         phoneNumber,
         role,
         image,
+        status,
       };
 
       const result = await userModel.updateUser(userId, setData);
