@@ -112,6 +112,9 @@ module.exports = {
     try {
       const { name, category, location, detail, dateTimeShow, price } =
         request.body;
+      if (!request.file) {
+        return wrapper.response(response, 404, "Image Must Be Filled");
+      }
       const { filename, mimetype } = request.file;
       const setEvent = {
         name,
@@ -199,9 +202,6 @@ module.exports = {
           checkId.data[0].image.split(".")[0],
           (result) => result
         );
-      }
-      if (!request.file) {
-        return wrapper.response(response, 404, "Image Must Be Filled");
       }
 
       const setData = {
