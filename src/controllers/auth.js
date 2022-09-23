@@ -77,6 +77,7 @@ module.exports = {
   },
   verify: async (request, response) => {
     try {
+      //add
       const { OTP } = request.params;
 
       const cehckOTP = await client.get(`OTP:${OTP}`);
