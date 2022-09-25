@@ -270,7 +270,6 @@ module.exports = {
         lowerCaseAlphabets: false,
       });
       client.setEx(`OTPReset:${OTPReset}`, 3600, OTPReset);
-      console.log(OTPReset);
       client.setEx(`userId:${OTPReset}`, 3600 * 48, userId);
 
       const setMailOptions = {
