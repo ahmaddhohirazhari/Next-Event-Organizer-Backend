@@ -5,7 +5,7 @@ const authModel = require("../models/auth");
 const userModel = require("../models/user");
 const wrapper = require("../utils/wrapper");
 const client = require("../config/redis");
-const { sendMail } = require("../utils/mail");
+const { sendMail, sendMailToResetPassword } = require("../utils/mail");
 
 module.exports = {
   register: async (request, response) => {
@@ -121,6 +121,7 @@ module.exports = {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
       const { userId } = checkEmail.data[0];
+
       // CEK STATUS ACOUNT
       const cehckStatus = client.get(`userId:${userId}`);
 
@@ -243,6 +244,102 @@ module.exports = {
       };
 
       return wrapper.response(response, 200, "Succes Refresh Token", result);
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  forgotPassword: async (request, response) => {
+    try {
+      const { email } = request.body;
+      const checkEmail = await authModel.getUserByEmail(email);
+
+      if (checkEmail.length < 1) {
+        return wrapper.response(response, 400, "Email Not Registered", null);
+      }
+      const { userId } = checkEmail.data[0];
+      const { username } = checkEmail.data[0];
+
+      const OTPReset = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false,
+      });
+      client.setEx(`OTPReset:${OTPReset}`, 3600, OTPReset);
+      console.log(OTPReset);
+      client.setEx(`userId:${OTPReset}`, 3600 * 48, userId);
+
+      const setMailOptions = {
+        to: email,
+        name: username,
+        subject: "Email Verification !",
+        template: "verificationResetPassword.html",
+        buttonUrl: `http://localhost:3001/api/auth/resetPassword/${OTPReset}`,
+      };
+
+      await sendMailToResetPassword(setMailOptions);
+      const result = [{ email: checkEmail.data[0].email }];
+
+      return wrapper.response(
+        response,
+        200,
+        "Process Success Please Check Your Email",
+        result
+      );
+    } catch (error) {
+      const {
+        status = 500,
+        statusText = "Internal Server Error",
+        error: errorData = null,
+      } = error;
+      return wrapper.response(response, status, statusText, errorData);
+    }
+  },
+  ResetPassword: async (request, response) => {
+    try {
+      const { OTPReset } = request.params;
+      const { newPassword, confirmPassword } = request.body;
+
+      const cehckOTPReset = await client.get(`OTPReset:${OTPReset}`);
+      if (!cehckOTPReset) {
+        return wrapper.response(response, 400, "Wrong Input OTPReset", null);
+      }
+      const userId = await client.get(`userId:${OTPReset}`);
+
+      const checkId = await userModel.getUserById(userId);
+      if (checkId.data.length < 1) {
+        return wrapper.response(
+          response,
+          404,
+          `Update By Id ${userId} Not Found`,
+          []
+        );
+      }
+
+      // CONFIRM NEWPASSWORD
+      if (newPassword !== confirmPassword) {
+        return wrapper.response(response, 400, "Password Not Match", null);
+      }
+
+      // HASH PASSWORD
+      const hash = bcrypt.hashSync(newPassword, 10);
+      const setData = {
+        password: hash,
+        updatedAt: "now()",
+      };
+      const result = await userModel.updateUser(userId, setData);
+      const newResult = [{ userId: result.data[0].userId }];
+
+      return wrapper.response(
+        response,
+        200,
+        "Success Reset Password ",
+        newResult
+      );
     } catch (error) {
       const {
         status = 500,
