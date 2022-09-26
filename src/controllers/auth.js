@@ -47,7 +47,7 @@ module.exports = {
         specialChars: false,
         lowerCaseAlphabets: false,
       });
-      client.setEx(`OTP:${OTP}`, 3600, OTP);
+      // client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
       // SEND EMAIL ACTIVATION
       const setMailOptions = {
@@ -80,14 +80,14 @@ module.exports = {
     try {
       const { OTP } = request.params;
 
-      const cehckOTP = await client.get(`OTP:${OTP}`);
-      if (!cehckOTP) {
+      const userId = await client.get(`userId:${OTP}`);
+      // const cehckOTP = await client.get(`OTP:${OTP}`);
+      if (!userId) {
         return wrapper.response(response, 400, "Wrong Input OTP", null);
       }
-      const userId = await client.get(`userId:${OTP}`);
 
       const result = [{ userId }];
-      client.set(`userId: ${userId}`, userId);
+
       const setStatus = {
         status: "active",
       };
@@ -269,7 +269,6 @@ module.exports = {
         specialChars: false,
         lowerCaseAlphabets: false,
       });
-      client.setEx(`OTPReset:${OTPReset}`, 3600, OTPReset);
       client.setEx(`userId:${OTPReset}`, 3600 * 48, userId);
 
       const setMailOptions = {
@@ -303,11 +302,10 @@ module.exports = {
       const { OTPReset } = request.params;
       const { newPassword, confirmPassword } = request.body;
 
-      const cehckOTPReset = await client.get(`OTPReset:${OTPReset}`);
-      if (!cehckOTPReset) {
+      const userId = await client.get(`userId:${OTPReset}`);
+      if (!userId) {
         return wrapper.response(response, 400, "Wrong Input OTPReset", null);
       }
-      const userId = await client.get(`userId:${OTPReset}`);
 
       const checkId = await userModel.getUserById(userId);
       if (checkId.data.length < 1) {
