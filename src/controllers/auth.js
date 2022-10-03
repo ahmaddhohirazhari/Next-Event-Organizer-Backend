@@ -60,7 +60,6 @@ module.exports = {
       };
 
       await sendMail(setMailOptions);
-
       return wrapper.response(
         response,
         200,
