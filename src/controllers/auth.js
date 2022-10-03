@@ -151,7 +151,7 @@ module.exports = {
       const refreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
         expiresIn: "36h",
       });
-
+      console.log("test");
       // 4. PROSES RESPON KE USER
 
       const newResult = {
