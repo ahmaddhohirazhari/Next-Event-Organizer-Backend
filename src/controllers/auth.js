@@ -111,13 +111,12 @@ module.exports = {
       if (checkEmail.data.length < 1) {
         return wrapper.response(response, 404, "Email Not Registed", null);
       }
-      console.log(request.body);
+
       // 2. PROSES PENCOCOKAN PASSWORD
       const isValid = await bcrypt
         .compare(password, checkEmail.data[0].password)
         .then((result) => result);
       if (!isValid) {
-        console.log("test");
         return wrapper.response(response, 400, "Wrong Password", null);
       }
       const { userId } = checkEmail.data[0];
@@ -152,7 +151,7 @@ module.exports = {
       const refreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
         expiresIn: "36h",
       });
-      console.log("test");
+
       // 4. PROSES RESPON KE USER
 
       const newResult = {
