@@ -11,7 +11,7 @@ module.exports = {
   register: async (request, response) => {
     try {
       const { username, email, password } = request.body;
-      console.log(request.body);
+
       // PROSES VALIDASI PASSWORD
       if (password.length < 6) {
         return wrapper.response(
@@ -49,7 +49,7 @@ module.exports = {
       });
       // client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
-      console.log("test");
+
       // SEND EMAIL ACTIVATION
       const setMailOptions = {
         to: email,
