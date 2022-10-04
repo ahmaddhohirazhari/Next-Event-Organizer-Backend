@@ -50,7 +50,7 @@ module.exports = {
 
       // client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
-      console.log("test");
+
       // SEND EMAIL ACTIVATION
       const setMailOptions = {
         to: email,
