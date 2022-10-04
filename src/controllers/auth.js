@@ -47,6 +47,7 @@ module.exports = {
         specialChars: false,
         lowerCaseAlphabets: false,
       });
+
       // client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
 
