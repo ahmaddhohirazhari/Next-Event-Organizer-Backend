@@ -9,7 +9,7 @@ module.exports = {
       // eslint-disable-next-line prefer-const
       let { page, limit, searchName, sort, searchDateShow } = request.query;
       page = +page || 1;
-      limit = +limit || 3;
+      limit = +limit || 4;
 
       const totalData = await eventModel.getCountEvent();
 
