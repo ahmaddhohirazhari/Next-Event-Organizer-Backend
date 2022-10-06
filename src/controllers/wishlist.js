@@ -10,6 +10,18 @@ module.exports = {
         eventId,
         userId,
       };
+      const checkEventId = await wishlistModel.getWishlistByEventId(eventId);
+      if (checkEventId.data.length > 0) {
+        const id = checkEventId.data[0].wishlistId;
+        const result = await wishlistModel.deleteWishlist(id);
+        return wrapper.response(
+          response,
+          result.status,
+          "Success Delete Wishlist !",
+          result.data
+        );
+      }
+
       const result = await wishlistModel.createWishlist(setWishlist);
       return wrapper.response(
         response,

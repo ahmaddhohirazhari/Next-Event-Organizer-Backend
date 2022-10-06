@@ -62,6 +62,23 @@ module.exports = {
           }
         });
     }),
+  getWishlistByEventId: (id) =>
+    new Promise((resolve, reject) => {
+      supabase
+        .from("wishlist")
+        .select(
+          `*,
+        event(*)`
+        )
+        .eq("eventId", id)
+        .then((result) => {
+          if (!result.error) {
+            resolve(result);
+          } else {
+            reject(result);
+          }
+        });
+    }),
   deleteWishlist: (id) =>
     new Promise((resolve, reject) => {
       supabase
