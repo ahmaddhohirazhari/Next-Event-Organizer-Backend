@@ -34,23 +34,15 @@ module.exports = {
         console.log("test");
         query = query
           .gt("dateTimeShow", `${day.toISOString()}`)
-          .lt("dateTimeShow", `${nextDay.toISOString()}`)
-          .then((result) => {
-            if (!result.error) {
-              resolve(result);
-            } else {
-              reject(result);
-            }
-          });
-      } else {
-        query.then((result) => {
-          if (!result.error) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
+          .lt("dateTimeShow", `${nextDay.toISOString()}`);
       }
+      query.then((result) => {
+        if (!result.error) {
+          resolve(result);
+        } else {
+          reject(result);
+        }
+      });
     }),
   getEventById: (eventId) =>
     new Promise((resolve, reject) => {
