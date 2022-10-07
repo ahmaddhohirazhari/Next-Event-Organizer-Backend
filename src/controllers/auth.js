@@ -10,7 +10,7 @@ const { sendMail, sendMailToResetPassword } = require("../utils/mail");
 module.exports = {
   register: async (request, response) => {
     try {
-      const { username, email, password } = request.body;
+      const { username, email, password, confirmPassword } = request.body;
 
       // PROSES VALIDASI PASSWORD
       if (password.length < 6) {
@@ -22,6 +22,9 @@ module.exports = {
         );
       }
 
+      if (password !== confirmPassword) {
+        return wrapper.response(response, 400, "Password Not Match", null);
+      }
       // PROSES ENCRYPT PASSWORD
       const hash = bcrypt.hashSync(password, 10);
 
@@ -121,12 +124,10 @@ module.exports = {
       if (!isValid) {
         return wrapper.response(response, 400, "Wrong Password", null);
       }
-      const { userId } = checkEmail.data[0];
 
-      // CEK STATUS ACOUNT
-      const cehckStatus = client.get(`userId:${userId}`);
+      // CEK STATUS ACCOUNT
 
-      if (!cehckStatus) {
+      if (checkEmail.data[0].status !== "active") {
         return wrapper.response(
           response,
           400,
