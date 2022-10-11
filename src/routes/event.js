@@ -8,8 +8,18 @@ const authMiddleware = require("../middleware/auth");
 const uploadMiddleware = require("../middleware/uploadFile");
 const redisMiddleware = require("../middleware/redis");
 
-Router.get("/", redisMiddleware.getAllEvent, eventController.getAllEvent);
-Router.get("/:id", redisMiddleware.getEventById, eventController.getEventById);
+Router.get(
+  "/",
+  authMiddleware.authentication,
+  redisMiddleware.getAllEvent,
+  eventController.getAllEvent
+);
+Router.get(
+  "/:id",
+  authMiddleware.authentication,
+  redisMiddleware.getEventById,
+  eventController.getEventById
+);
 Router.post(
   "/",
   authMiddleware.authentication,

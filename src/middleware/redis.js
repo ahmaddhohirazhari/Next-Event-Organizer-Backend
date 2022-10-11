@@ -39,7 +39,7 @@ module.exports = {
       }
       return next();
     } catch (error) {
-      return wrapper.response(response, 400, error.message, null);
+      return wrapper.response(response, 400, "Not Found", null);
     }
   },
   clearEvent: async (request, response, next) => {
