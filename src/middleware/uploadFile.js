@@ -41,6 +41,7 @@ module.exports = {
     });
   },
   uploadUser: (request, response, next) => {
+    console.log("test");
     const storage = new CloudinaryStorage({
       cloudinary,
       params: {

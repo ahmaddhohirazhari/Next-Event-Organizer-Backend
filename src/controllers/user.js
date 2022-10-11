@@ -198,21 +198,24 @@ module.exports = {
           []
         );
       }
-
+      console.log("test1");
       let image;
       if (request.file) {
         const { filename, mimetype } = request.file;
         image = filename ? `${filename}.${mimetype.split("/")[1]}` : "";
+
         // PROSES DELETE FILE DI CLOUDINARY
-        cloudinary.uploader.destroy(
-          checkId.data[0].image.split(".")[0],
-          (result) => result
-        );
+        if (checkId.data[0].image.split(".")[0]) {
+          cloudinary.uploader.destroy(
+            checkId.data[0].image.split(".")[0],
+            (result) => result
+          );
+        }
       }
       if (!request.file) {
         return wrapper.response(response, 404, "Image Must Be Filled");
       }
-
+      console.log(image);
       const setData = {
         image,
       };
