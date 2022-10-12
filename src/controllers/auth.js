@@ -148,7 +148,7 @@ module.exports = {
       };
 
       const token = jwt.sign(payload, process.env.ACCESS_KEYS, {
-        expiresIn: "30s",
+        expiresIn: "10s",
       });
 
       const refreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
@@ -191,6 +191,7 @@ module.exports = {
       return wrapper.response(response, status, statusText, errorData);
     }
   },
+  // eslint-disable-next-line consistent-return
   refresh: async (request, response) => {
     try {
       const { refreshtoken } = request.headers;
@@ -237,15 +238,19 @@ module.exports = {
           expiresIn: "36h",
         });
         client.setEx(`refreshtoken:${refreshtoken}`, 3600 * 36, refreshtoken);
-        return result;
-      });
-      const result = {
-        userId: payload.userId,
-        token,
-        refreshtoken: newRefreshtoken,
-      };
+        const newResult = {
+          userId: payload.userId,
+          token,
+          refreshtoken: newRefreshtoken,
+        };
 
-      return wrapper.response(response, 200, "Succes Refresh Token", result);
+        return wrapper.response(
+          response,
+          200,
+          "Succes Refresh Token",
+          newResult
+        );
+      });
     } catch (error) {
       const {
         status = 500,
