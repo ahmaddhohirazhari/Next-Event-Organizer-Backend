@@ -9,7 +9,7 @@ module.exports = {
       const { eventId, totalPayment, paymentMethod, statusPayment, section } =
         request.body;
 
-      const { userId } = request.params;
+      const { userId } = request.decodeToken;
       const totalTicket = section.length;
 
       const setBooking = {
@@ -94,7 +94,7 @@ module.exports = {
   },
   getBookingByUserId: async (request, response) => {
     try {
-      const { userId } = request.params;
+      const { userId } = request.decodeToken;
 
       const result = await bookingModel.getBookingByUserId(userId);
       if (result.data.length < 1) {
@@ -129,7 +129,7 @@ module.exports = {
         return wrapper.response(
           response,
           404,
-          `User By user Id ${eventId} Not Found`,
+          `Booking Section By Event Id ${eventId} Not Found`,
           []
         );
       }

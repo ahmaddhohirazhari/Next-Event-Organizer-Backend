@@ -15,7 +15,7 @@ Router.get(
   bookingController.getAllBooking
 );
 Router.get(
-  "/list/:userId",
+  "/list",
   authMiddleware.authentication,
   bookingController.getBookingByUserId
 );

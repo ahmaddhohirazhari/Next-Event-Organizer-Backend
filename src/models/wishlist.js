@@ -62,7 +62,7 @@ module.exports = {
           }
         });
     }),
-  getWishlistByEventId: (id) =>
+  getWishlistByEventId: (eventId, userId) =>
     new Promise((resolve, reject) => {
       supabase
         .from("wishlist")
@@ -70,7 +70,8 @@ module.exports = {
           `*,
         event(*)`
         )
-        .eq("eventId", id)
+        .eq("eventId", eventId)
+        .eq("userId", userId)
         .then((result) => {
           if (!result.error) {
             resolve(result);
