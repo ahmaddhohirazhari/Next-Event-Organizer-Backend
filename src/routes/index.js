@@ -6,12 +6,12 @@ const eventRoutes = require("./event");
 const userRoutes = require("./user");
 const wishlistRoutes = require("./wishlist");
 const bookingRoutes = require("./booking");
-const authRouters = require("./auth");
+const authRoutes = require("./auth");
 
 Router.use("/event", eventRoutes);
 Router.use("/user", userRoutes);
 Router.use("/wishlist", wishlistRoutes);
 Router.use("/booking", bookingRoutes);
-Router.use("/auth", authRouters);
+Router.use("/auth", authRoutes);
 
 module.exports = Router;
