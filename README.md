@@ -1,4 +1,4 @@
-<h1 align="center">ExpressJS - Next-Event-Organizer  RESTfull API</h1>
+<h1 align="center">ExpressJS - Next-Event-Organizing  RESTfull API</h1>
 
 #background_projek. [More about Express](https://en.wikipedia.org/wiki/Express.js)
 
@@ -36,5 +36,5 @@ SUPABASE_KEY //Databes KEY
 
 ## License
 
-© [Ahmad Dhohir Azhari](https://github.com/ahmaddhohirazhari)
+© [Ahmad Dhohir Azhari](https://github.com/hireMe123123)
 ```

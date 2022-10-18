@@ -50,7 +50,7 @@ module.exports = {
           `*,
         bookingSection(sectionId,section,statusUsed)`
         )
-        .match({ userId })
+        .eq("userId", userId)
         .then((result) => {
           if (!result.error) {
             resolve(result);

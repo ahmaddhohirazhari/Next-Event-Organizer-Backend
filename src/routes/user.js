@@ -16,9 +16,9 @@ Router.get(
   userController.getAllUser
 );
 
-Router.get("/:id", userController.getUserById);
+Router.get("/:id", authMiddleware.authentication, userController.getUserById);
 Router.post("/", uploadMiddleware.uploadUser, userController.createUser);
-Router.delete("/:id", userController.deleteUser);
+Router.delete("/:id", authMiddleware.authentication, userController.deleteUser);
 
 // UPDATE DATA USER
 Router.patch(
