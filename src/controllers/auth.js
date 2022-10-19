@@ -42,6 +42,7 @@ module.exports = {
 
       // PROSES MENYIMPAN DATA KE DATABASE LEWAT MODEL
       const result = await authModel.register(setData);
+      console.log(result);
       const newResult = [{ userId: result.data[0].userId }];
 
       // GENERATE OTP
@@ -51,7 +52,7 @@ module.exports = {
         lowerCaseAlphabets: false,
       });
 
-      // client.setEx(`OTP:${OTP}`, 3600, OTP);
+      client.setEx(`OTP:${OTP}`, 3600, OTP);
       client.setEx(`userId:${OTP}`, 3600 * 48, result.data[0].userId);
 
       // SEND EMAIL ACTIVATION

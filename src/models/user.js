@@ -16,7 +16,6 @@ module.exports = {
     }),
   getUserById: (userId) =>
     new Promise((resolve, reject) => {
-      // SELECT * FROM user WHERE userId = "123"
       supabase
         .from("user")
         .select("*")
