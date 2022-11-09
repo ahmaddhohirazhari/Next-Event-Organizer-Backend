@@ -24,5 +24,6 @@ Router.get(
   authMiddleware.authentication,
   bookingController.getBookingSection
 );
+Router.post("/midtrans-notification", bookingController.midtransNotification);
 
 module.exports = Router;
