@@ -50,7 +50,6 @@ module.exports = {
           bookingId,
           ...finalResult,
           redirectUrl: resultMidtrans.redirect_url,
-          // insertUrl,
         }
       );
     } catch (error) {

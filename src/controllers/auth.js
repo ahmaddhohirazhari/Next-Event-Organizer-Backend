@@ -149,7 +149,7 @@ module.exports = {
       };
 
       const token = jwt.sign(payload, process.env.ACCESS_KEYS, {
-        expiresIn: "10s",
+        expiresIn: "36h",
       });
 
       const refreshToken = jwt.sign(payload, process.env.REFRESH_KEYS, {
