@@ -24,18 +24,15 @@ module.exports = {
       const offset = page * limit - limit;
 
       // PROSES SET SORTING
-      let sortColumn = "dateTimeShow";
-      let sortType = "asc";
+      const sortColumn = "dateTimeShow";
+      let sortType = true;
       if (sort) {
-        // eslint-disable-next-line prefer-destructuring
-        sortColumn = sort.split(" ")[0];
-        // eslint-disable-next-line prefer-destructuring
-        sortType = sort.split(" ")[1];
-      }
-      if (sortType.toLowerCase() === "asc") {
-        sortType = true;
-      } else {
-        sortType = false;
+        if (sort.toLowerCase() === "asc") {
+          sortType = true;
+          console.log("cek1");
+        } else {
+          sortType = false;
+        }
       }
 
       // PROSES SEARCH SHOWTIME
