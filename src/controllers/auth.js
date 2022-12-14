@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
@@ -11,6 +12,12 @@ module.exports = {
   register: async (request, response) => {
     try {
       const { username, email, password, confirmPassword } = request.body;
+      const validateEmail = () =>
+        email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/);
+
+      if (!validateEmail(email)) {
+        return wrapper.response(response, 400, "Email is not valid", null);
+      }
 
       // PROSES VALIDASI PASSWORD
       if (password.length < 6) {
@@ -111,6 +118,12 @@ module.exports = {
   login: async (request, response) => {
     try {
       const { email, password } = request.body;
+      const validateEmail = () =>
+        email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/);
+
+      if (!validateEmail(email)) {
+        return wrapper.response(response, 400, "Email is not valid", null);
+      }
 
       // 1. PROSES PENGECEKAN EMAIL
       const checkEmail = await authModel.getUserByEmail(email);
